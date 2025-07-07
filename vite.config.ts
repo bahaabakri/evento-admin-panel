@@ -10,5 +10,10 @@ export default defineConfig({
         // additionalData: `@use "src/styles/variables.scss" as *;`
       }
     }
-  }
+  },
+  resolve: {
+    alias: {
+      '@': "/src",
+    },
+  },
 })

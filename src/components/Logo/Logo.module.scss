@@ -1,0 +1,12 @@
+.logo-wrapper {
+    @apply  text-white text-4xl font-bold;
+    letter-spacing: 5px;
+    .letters {
+        @apply flex flex-nowrap items-end;
+    }
+    .e-letter {
+        display: inline-block;
+        color: var(--primary-color);
+        rotate: -15deg;
+    }
+}

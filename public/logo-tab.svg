@@ -1,0 +1,10 @@
+<!-- Save this as "favicon.svg" -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        font-size="48" font-family="Arial, sans-serif"
+        fill="#C21E56"
+        transform="rotate(-15 32 32)"
+        >
+        E
+  </text>
+</svg>

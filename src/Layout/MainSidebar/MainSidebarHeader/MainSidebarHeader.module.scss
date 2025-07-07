@@ -1,0 +1,28 @@
+.main-sidebar-header-wrapper {
+    @apply flex items-center justify-between cursor-pointer;
+    border-radius: var(--mantine-radius-sm);
+    padding: var(--mantine-spacing-md);
+    .content-wrapper {
+        @apply flex items-center;
+        gap: var(--mantine-spacing-sm);
+        .user-info-wrapper {
+            @apply flex flex-col;
+            gap: var(--mantine-spacing-xs);
+            .username {
+                @apply font-bold;
+                color: var(--mantine-color-dark-6);
+                font-size: var(--mantine-font-size-xs);
+            }
+            .email {
+                color: var(--mantine-color-gray-5);
+                font-size: var(--mantine-font-size-xs);
+            }
+        }
+    }
+
+    &:hover {
+        background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+        color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+    }
+
+}
