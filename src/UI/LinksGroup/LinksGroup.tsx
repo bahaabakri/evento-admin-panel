@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { IconChevronRight, type Icon, type IconProps } from '@tabler/icons-react';
-import { Box, Collapse, Group, Stack, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
+import { Box, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import classes from './LinksGroup.module.scss';
 
 interface LinksGroupProps {
-  icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
+  icon?: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
   label: string;
   initiallyOpened?: boolean;
   links?: { label: string; link: string }[];
@@ -15,17 +15,6 @@ interface LinksGroupProps {
 export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDown, trigger = 'click' }: LinksGroupProps) {
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
-  const items = (hasLinks ? links : []).map((link) => (
-    <Text<'a'>
-      component="a"
-      className={classes.link}
-      href={link.link}
-      key={link.label}
-      onClick={(event) => event.preventDefault()}
-    >
-      {link.label}
-    </Text>
-  ));
   const handleMouseEnter = () => {
     if (trigger === 'hover' && hasLinks) setOpened(true);
   };
@@ -45,10 +34,13 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDo
         onMouseLeave={handleMouseLeave}>
       <UnstyledButton onClick={handleClick} className={classes.control}>
         <Group justify="space-between" gap={0}>
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ThemeIcon variant="light" size={30}>
-              <Icon size={18} />
-            </ThemeIcon>
+          <Box style={{ display: 'flex', alignItems: 'center', paddingLeft: (!Icon && !isDropDown) ? '30px' : '0px' }}>
+            {
+                Icon && 
+                <ThemeIcon variant="light" size={30}>
+                    <Icon size={18} />
+                </ThemeIcon>
+            }
             <Box ml="md">{label}</Box>
           </Box>
           {hasLinks && (
@@ -68,24 +60,18 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDo
           )}
         </Group>
       </UnstyledButton>
-        {hasLinks && opened && isDropDown && (
-            <Box className={classes.submenu}>
-            <Stack gap="xs">
-                {links!.map((link) => (
-                <Text<'a'>
-                    component="a"
-                    className={`${classes['item']} ${classes['dropdown-item']}`}
-                    href={link.link}
-                    key={link.label}
-                    onClick={(event) => event.preventDefault()}
-                >
-                    {link.label}
-                </Text>
-                ))}
-            </Stack>
-            </Box>
+        {hasLinks && opened && (
+        <Box className={isDropDown ? classes.dropdownSubmenu : undefined}>
+            {links!.map((link) => (
+            <LinksGroup
+                key={link.label}
+                {...link}
+                isDropDown={isDropDown}
+                trigger={trigger}
+            />
+            ))}
+        </Box>
         )}
-      {hasLinks && !isDropDown ? <Collapse in={opened}>{items}</Collapse> : null}
     </Box>
   );
 }
