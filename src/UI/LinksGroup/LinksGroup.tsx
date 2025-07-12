@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { IconChevronRight, type Icon, type IconProps } from '@tabler/icons-react';
 import { Box, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import classes from './LinksGroup.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 interface LinksGroupProps {
   icon?: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
@@ -9,10 +10,12 @@ interface LinksGroupProps {
   initiallyOpened?: boolean;
   links?: { label: string; link: string }[];
   isDropDown?:boolean;
+  link?:string;
   trigger?: 'click' | 'hover';
 }
 
-export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDown, trigger = 'click' }: LinksGroupProps) {
+export function LinksGroup({ icon: Icon, label, initiallyOpened, links, link, isDropDown, trigger = 'click' }: LinksGroupProps) {
+  const navigate = useNavigate()
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
   const handleMouseEnter = () => {
@@ -24,7 +27,15 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDo
   };
 
   const handleClick = () => {
-    if (trigger === 'click' && hasLinks) setOpened((o) => !o);
+    if (trigger === 'click') {
+      if(hasLinks) {
+        setOpened((o) => !o);
+      } else if(link) {
+        // navigate
+        navigate(link)
+      }
+    } 
+      
   };
   return (
     <Box 
@@ -34,7 +45,7 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDo
         onMouseLeave={handleMouseLeave}>
       <UnstyledButton onClick={handleClick} className={classes.control}>
         <Group justify="space-between" gap={0}>
-          <Box style={{ display: 'flex', alignItems: 'center', paddingLeft: (!Icon && !isDropDown) ? '30px' : '0px' }}>
+          <Box style={{ display: 'flex', alignItems: 'center'}}>
             {
                 Icon && 
                 <ThemeIcon variant="light" size={30}>
@@ -61,7 +72,7 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, isDropDo
         </Group>
       </UnstyledButton>
         {hasLinks && opened && (
-        <Box className={isDropDown ? classes.dropdownSubmenu : undefined}>
+        <Box className={isDropDown ? classes.dropdownSubmenu : classes.menuSubmenu}>
             {links!.map((link) => (
             <LinksGroup
                 key={link.label}

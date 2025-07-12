@@ -1,12 +1,10 @@
 
 import './App.scss'
-import MainLayout from './Layout/Layout'
+import MainRouterProvider from './Router'
 function App() {
 
   return (
-    <>
-      <MainLayout />
-    </>
+    <MainRouterProvider />
   )
 }
 
