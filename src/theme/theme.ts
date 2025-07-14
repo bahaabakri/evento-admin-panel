@@ -75,5 +75,29 @@ export const theme = createTheme({
       '#0c8599',
       '#0b7285',
     ],
+    success: [
+      '#ebfbee', // 0 - very light green
+      '#d3f9d8', // 1
+      '#b2f2bb', // 2
+      '#8ce99a', // 3
+      '#69db7c', // 4
+      '#51cf66', // 5 - base success green
+      '#40c057', // 6
+      '#37b24d', // 7
+      '#2f9e44', // 8
+      '#2b8a3e', // 9 - darkest green
+    ],
+    error: [
+      '#fff5f5', // 0 - very light red
+      '#ffe3e3', // 1
+      '#ffc9c9', // 2
+      '#ffa8a8', // 3
+      '#ff8787', // 4
+      '#ff6b6b', // 5 - base error red
+      '#fa5252', // 6
+      '#f03e3e', // 7
+      '#e03131', // 8
+      '#c92a2a', // 9 - darkest red
+    ],
   },
 });
