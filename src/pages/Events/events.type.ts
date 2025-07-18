@@ -1,3 +1,5 @@
+import type { Pagination } from "../../types/pagination.type";
+
 export interface MyEvent {
     id: number;
     name: string;
@@ -12,4 +14,9 @@ export interface MyEvent {
     createdAt: Date;
     updatedAt: Date;
     createdAdminId: number;
+}
+
+export interface MyEventResponse {
+    data: MyEvent[];
+    meta: Pagination;
 }

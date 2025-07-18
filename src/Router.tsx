@@ -11,7 +11,7 @@ const MainRouterProvider = () => {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} /> {/* Default child route */}
             <Route path="events">
-                <Route path="" element={<EventPage/>} />
+                <Route index element={<EventPage/>} />
             </Route>
           </Route>
         </Routes>
