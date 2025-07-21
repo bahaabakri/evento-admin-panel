@@ -1,5 +1,5 @@
 import { Table, ScrollArea, Loader } from "@mantine/core";
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import classes from './MainTable.module.scss'
 import cx from 'clsx';
 import { transformIsoDateToReadable } from "../../services/date";
@@ -15,8 +15,9 @@ interface MainTableProps<T> {
   columns: Column<T>[];
   loading:boolean;
   errorMessage:string | null;
+  children:ReactElement
 }
-const MainTable = <T,>({ title, data, columns, loading, errorMessage }: MainTableProps<T>) => {
+const MainTable = <T,>({children, title, data, columns, loading, errorMessage }: MainTableProps<T>) => {
   const [scrolled, setScrolled] = useState(false);
 
   const rows = data.map((row, rowIndex) => (
@@ -38,7 +39,12 @@ const MainTable = <T,>({ title, data, columns, loading, errorMessage }: MainTabl
 
   return (
     <>
+    <div className="flex justify-between align-center">
       {title && <h2 className={classes.title}>{title}</h2>}
+      <div className="flex items-center gap-2">
+        {children}
+      </div>
+    </div>
       {
         loading
         ?   <div className="flex items-center justify-center h-20">

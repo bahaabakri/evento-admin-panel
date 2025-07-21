@@ -15,7 +15,8 @@
 }
 .title {
      @apply my-5 font-bold;
-     color: var(--mantine-color-roseRed-5)
+     color: var(--mantine-color-roseRed-5);
+     font-size: var(--mantine-font-size-xl);
 }
 
 .scrolled {
