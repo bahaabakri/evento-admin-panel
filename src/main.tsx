@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.scss'
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+import 'leaflet/dist/leaflet.css';
 import App from './App.tsx'
 import {MantineProvider } from '@mantine/core'
 import { theme } from './theme/theme.ts';

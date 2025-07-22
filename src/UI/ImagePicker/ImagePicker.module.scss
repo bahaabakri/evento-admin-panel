@@ -1,0 +1,28 @@
+.image-picker-wrapper {
+    // @apply flex flex-col gap-5;
+    .image-picker {
+        @apply  rounded-xl w-full flex flex-col gap-5 p-1;
+        min-height: 200px;
+        border: 3px dotted var(--primary-color);
+        .image-picker-content {
+            @apply text-xl font-bold text-center;
+            color: var(--primary-color);
+        }
+        .images-preview {
+            @apply flex gap-2 flex-wrap;
+            .selected-image {
+                @apply relative;
+                height:100px;
+                width: 100px;
+                img {
+                    @apply rounded-xl w-full h-full object-cover;
+                }
+                .delete-icon {
+                    @apply absolute cursor-pointer -top-1 -right-1 rounded-full w-6 h-6 text-center flex items-center justify-center;
+                    background: var(--primary-color);
+                }
+            }
+        }
+    }
+
+}

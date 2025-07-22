@@ -8,9 +8,9 @@ interface CustomButtonProps extends ButtonProps, Omit<ButtonHTMLAttributes<HTMLB
 }
 const CustomButton:FC<CustomButtonProps> = ({children, isPending = false, isSecondButton = false, ...buttonProps}) => {
     return (
-        <Button variant="filled" {...buttonProps} color={isSecondButton ? 'gray' : 'roseRed'} disabled={isPending} >
+        <Button variant="filled" {...buttonProps} color={isSecondButton ? 'gray' : 'roseRed'} >
             <div className='flex gap-2 items-center justify-center'>
-                {isPending && <Loader />}
+                {isPending && <Loader size={16} />}
                 {children}
             </div>
         </Button>

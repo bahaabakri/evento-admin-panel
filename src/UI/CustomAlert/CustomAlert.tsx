@@ -1,29 +1,31 @@
 import { Alert, type DefaultMantineColor } from "@mantine/core";
+import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 interface CustomAlertProps {
   title: string;
   message: string;
-  color: DefaultMantineColor;
   closable?: boolean;
-  icon?: React.ReactNode;
+  type?: "success" | "error" | "info";
+  onClose?: () => void;
 }
 const CustomAlert = ({
+  onClose,
   title,
   message,
-  color,
+  type,
   closable,
-  icon,
 }: CustomAlertProps) => {
-  return (
-    <Alert
-      variant="light"
-      color={color}
-      radius="lg"
-      withCloseButton={closable}
-      title={title}
-      icon={icon}
-    >
-      {message}
-    </Alert>
-  );
+    return (
+        <Alert
+        variant="light"
+        color={type == 'error' ? 'red' : type == 'success' ? 'green' : 'blue' as DefaultMantineColor}
+        radius="lg"
+        withCloseButton={closable}
+        onClose={onClose}
+        title={title}
+        icon={type == 'error' ? <IconInfoCircle /> : type == 'success' ? <IconCheck /> : <IconInfoCircle /> }
+        >
+        {message}
+        </Alert>
+    );
 }
 export default CustomAlert;

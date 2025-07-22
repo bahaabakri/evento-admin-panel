@@ -34,7 +34,9 @@ const MainLayout = () => {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Outlet />
+        <div className="container mx-auto px-4">
+          <Outlet />
+        </div>
       </AppShell.Main>
     </AppShell>
   );

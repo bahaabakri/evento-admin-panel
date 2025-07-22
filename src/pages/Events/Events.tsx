@@ -32,7 +32,7 @@ const EventPage = () => {
     }, [])
 
     return (
-    <div className="mt-8">
+    <div>
         <MainTable 
             title={'All Events'}
             loading={loading} 

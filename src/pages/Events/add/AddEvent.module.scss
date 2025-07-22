@@ -1,8 +1,9 @@
 .new-event-wrapper {
-    @apply container mt-48 mx-auto;
+    @apply container mx-auto;
     .new-event {
         .new-event-title {
             @apply text-xl font-bold;
+            color: var(--primary-color);
         }
         @apply flex flex-col gap-5;
         .new-event-form {
