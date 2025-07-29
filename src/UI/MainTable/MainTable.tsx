@@ -15,9 +15,10 @@ interface MainTableProps<T> {
   columns: Column<T>[];
   loading:boolean;
   errorMessage:string | null;
-  children:ReactElement
+  children:ReactElement;
+  renderActions?: (row: T, rowIndex: number) => ReactElement;
 }
-const MainTable = <T,>({children, title, data, columns, loading, errorMessage }: MainTableProps<T>) => {
+const MainTable = <T,>({children, title, data, columns, loading, errorMessage, renderActions }: MainTableProps<T>) => {
   const [scrolled, setScrolled] = useState(false);
 
   const rows = data.map((row, rowIndex) => (
@@ -34,6 +35,7 @@ const MainTable = <T,>({children, title, data, columns, loading, errorMessage }:
             }
         </Table.Td>
       ))}
+      {renderActions && <Table.Td>{renderActions(row, rowIndex)}</Table.Td>}
     </Table.Tr>
   ));
 
@@ -59,6 +61,7 @@ const MainTable = <T,>({children, title, data, columns, loading, errorMessage }:
                   {columns.map((col) => (
                     <Table.Th key={col.header}>{col.header}</Table.Th>
                   ))}
+                  {renderActions && <Table.Th>Actions</Table.Th>}
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>{rows}</Table.Tbody>
