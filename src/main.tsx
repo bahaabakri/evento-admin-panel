@@ -3,10 +3,13 @@ import { createRoot } from 'react-dom/client'
 import './index.scss'
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
 import 'leaflet/dist/leaflet.css';
 import App from './App.tsx'
 import {MantineProvider } from '@mantine/core'
 import { theme } from './theme/theme.ts';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
 // import { ThemeVariables } from './theme/ThemeVariables.tsx';
 // import { ThemeVariables } from './theme/ThemeVariables.tsx'
 createRoot(document.getElementById('root')!).render(
@@ -15,8 +18,11 @@ createRoot(document.getElementById('root')!).render(
       theme={theme}
       defaultColorScheme="light" // ✅ New correct way
     >
+      <ModalsProvider>
+          <Notifications position="top-right" zIndex={2077} />
+          <App />
+      </ModalsProvider>
       {/* <ThemeVariables/> */}
-      <App />
     </MantineProvider>
   </StrictMode>
 )

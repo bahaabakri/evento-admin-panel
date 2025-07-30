@@ -7,6 +7,8 @@ import {Pagination, ThemeIcon } from "@mantine/core"
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react"
 import { useNavigate } from "react-router-dom"
 import CustomButton from "../../UI/CustomButton/CustomButton"
+import { useConfirmModal } from "../../hooks/useConfirmModal"
+import { showErrorToast, showSuccessToast } from "../../services/toast"
 // import { useDisclosure } from "@mantine/hooks"
 
 const EventPage = () => {
@@ -16,6 +18,8 @@ const EventPage = () => {
     const {loading, error:errorMessage, request} = useHttp()
     const [events, setEvents] = useState<MyEvent[]>([])
     const navigate = useNavigate()
+    const { openConfirmModal } = useConfirmModal();
+    
     const fetchAllEvents = async(page:number = 1, perPage:number = 10) => {
         setPage(page)
         const res = await request<MyEventResponse>('get', `admin/events?page=${page}&perPage=${perPage}`)
@@ -36,19 +40,29 @@ const EventPage = () => {
     const handleEdit =(row: MyEvent) => {
         console.log("Edit event", row.id);
     }
-    const handleDelete = async(row: MyEvent) => {
+    const onClickDeleteButton = async(row: MyEvent) => {
         // Implement delete functionality here
-        console.log("Delete event", row.id);
+        
+        openConfirmModal({
+            title: 'Delete item?',
+            message: 'Are you sure you want to delete this item? This cannot be undone.',
+            onConfirm: () => handleDelete(row),
+            confirmLabel: 'Delete',
+            color: 'red',
+        });
+    }
+
+    const handleDelete = async (row: MyEvent) => {
         try {
             const res = await request('delete', `admin/events/${row.id}`)
             if (res) {
                 // Optionally, you can refetch the events after deletion
+                showSuccessToast('Event deleted successfully');
                 fetchAllEvents(activePage);
             }
         } catch (error) {
-            console.error("Error deleting event:", error);
+            showErrorToast(error instanceof Error ? error.message : 'Failed to delete event');
         }
-
     }
     return (
     <div>
@@ -66,7 +80,7 @@ const EventPage = () => {
                 <ThemeIcon variant="light" color="blue" size={30} onClick={() => handleEdit(row)}>
                     <IconEdit color="blue" size={18} />
                 </ThemeIcon>
-                <ThemeIcon variant="light" color="red" size={30} onClick={() => handleDelete(row)}>
+                <ThemeIcon variant="light" color="red" size={30} onClick={() => onClickDeleteButton(row)}>
                     <IconTrash color="red" size={18} />
                 </ThemeIcon>
             </div>
