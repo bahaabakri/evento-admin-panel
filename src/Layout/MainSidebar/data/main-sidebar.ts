@@ -1,4 +1,4 @@
-import type { DropDownItem } from "../../../types/dropdown-Item.type";
+import type { DropDownItem } from "@/types/dropdown-Item.type";
 import { IconBulb, IconCalendarEvent, IconCheckbox, IconClearAll, IconClock, IconClockX, IconUser } from "@tabler/icons-react";
 const mainSidebarMenu: DropDownItem[] = [
   {

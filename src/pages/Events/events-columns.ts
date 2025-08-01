@@ -1,4 +1,4 @@
-import type { Column } from "../../UI/MainTable/MainTable";
+import type { Column } from "@/UI/MainTable/MainTable";
 import type { MyEvent } from "./events.type";
 
 const eventsColumns: Column<MyEvent>[] = [

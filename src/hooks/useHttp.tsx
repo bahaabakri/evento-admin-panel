@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import axios from 'axios';
-import {request as requestExt} from '../services/api';
+import {request as requestExt} from '@/services/api';
 
 
 type RequestConfig = {

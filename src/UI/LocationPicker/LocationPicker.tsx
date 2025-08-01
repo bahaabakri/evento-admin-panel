@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-lea
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import classes from './LocationPicker.module.scss';
-import CustomButton from '../CustomButton/CustomButton';
+import CustomButton from '@/UI/CustomButton/CustomButton';
 import { IconCurrentLocation, IconMapPinFilled } from '@tabler/icons-react';
 import { renderToString } from 'react-dom/server';
 
@@ -74,8 +74,6 @@ export default function LocationPicker({
 
   return (
     <>
-
-
       <MapContainer
         center={[position.lat, position.lng]}
         zoom={13}

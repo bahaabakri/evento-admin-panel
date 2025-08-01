@@ -1,4 +1,4 @@
-import type { Pagination } from "../../types/pagination.type";
+import type { Pagination } from "@/types/pagination.type";
 
 export interface MyEvent {
     id: number;

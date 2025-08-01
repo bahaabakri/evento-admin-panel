@@ -2,7 +2,7 @@ import { Table, ScrollArea, Loader } from "@mantine/core";
 import { useState, type ReactElement } from "react";
 import classes from './MainTable.module.scss'
 import cx from 'clsx';
-import { transformIsoDateToReadable } from "../../services/date";
+import { transformIsoDateToReadable } from "@/services/date";
 import { IconSquareRoundedX, IconChecks } from "@tabler/icons-react";
 export interface Column<T> {
   header: string;

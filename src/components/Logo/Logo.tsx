@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from './Logo.module.scss';
-import OLogo from "../OlLgo/OLogo";
+import OLogo from "@/components/OlLgo/OLogo";
 // import wheelImg from '@/assets/wheel.svg';
 const Logo = () => {
 return (

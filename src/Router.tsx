@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import MainLayout from "./Layout/Layout"
-import EventPage from "./pages/Events/Events"
-import HomePage from "./pages/Home/Home"
-import AddEventPage from "./pages/Events/add/AddEvent"
+import MainLayout from "@/Layout/Layout"
+import EventPage from "@/pages/Events/Events"
+import HomePage from "@/pages/Home/Home"
+import AddEventPage from "@/pages/Events/add/AddEvent"
 
 
 const MainRouterProvider = () => {

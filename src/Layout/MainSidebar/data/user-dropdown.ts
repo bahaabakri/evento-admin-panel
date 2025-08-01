@@ -1,4 +1,4 @@
-import type { DropDownItem } from "../../../types/dropdown-Item.type";
+import type { DropDownItem } from "@/types/dropdown-Item.type";
 import {IconCheckbox, IconSettings, IconUser } from "@tabler/icons-react";
 const userDropDownMenu: DropDownItem[] = [
   { icon: IconUser,

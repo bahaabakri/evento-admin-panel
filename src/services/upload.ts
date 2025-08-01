@@ -1,5 +1,5 @@
-import {request} from "../services/api";
-import type { UploadImagesResponse, RequestIntentResponse, DeleteImageResponse } from "../types/upload.type";
+import {request} from "@/services/api";
+import type { UploadImagesResponse, RequestIntentResponse, DeleteImageResponse } from "@/types/upload.type";
 
 export function requestUploadIntent() {
     return request<RequestIntentResponse>('post', 'upload-image/intent', {})

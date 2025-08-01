@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
-import { MainSidebar } from "./MainSidebar/MainSidebar";
+import { MainSidebar } from "@/Layout/MainSidebar/MainSidebar";
 // import styles from './Layout.module.scss';
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Header from "./Header/Header";
+import Header from "@/Layout/Header/Header";
 const MainLayout = () => {
   const [opened, { toggle }] = useDisclosure();
 

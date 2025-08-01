@@ -5,9 +5,9 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import 'leaflet/dist/leaflet.css';
-import App from './App.tsx'
+import App from './App'
 import {MantineProvider } from '@mantine/core'
-import { theme } from './theme/theme.ts';
+import { theme } from './theme/theme';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 // import { ThemeVariables } from './theme/ThemeVariables.tsx';

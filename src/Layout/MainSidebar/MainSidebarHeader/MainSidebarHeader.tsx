@@ -1,9 +1,9 @@
 import { Avatar, Menu } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import styles from './MainSidebarHeader.module.scss';
-import avatarImg from '../../../assets/avatar.jpg';
-import userDropDownMenu from "../data/user-dropdown";
-import { LinksGroup } from "../../../UI/LinksGroup/LinksGroup";
+import avatarImg from '@/assets/avatar.jpg';
+import userDropDownMenu from "@/Layout/MainSidebar/data/user-dropdown";
+import { LinksGroup } from "@/UI/LinksGroup/LinksGroup";
 
 const MainSidebarHeader = () => {
     return (

@@ -5,9 +5,9 @@ import {
 } from '@mantine/core';
 // import { UserButton } from '../UserButton/UserButton';
 import classes from './MainSidebar.module.scss';
-import MainSidebarHeader from './MainSidebarHeader/MainSidebarHeader';
-import mainSidebarMenu from './data/main-sidebar'
-import { LinksGroup } from '../../UI/LinksGroup/LinksGroup';
+import MainSidebarHeader from '@/Layout/MainSidebar/MainSidebarHeader/MainSidebarHeader';
+import mainSidebarMenu from '@/Layout/MainSidebar/data/main-sidebar'
+import { LinksGroup } from '@/UI/LinksGroup/LinksGroup';
 
 export function MainSidebar() {
   const mainLinks = mainSidebarMenu.map((item) => <LinksGroup {...item} key={item.label} />);

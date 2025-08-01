@@ -1,8 +1,8 @@
 import {  useEffect, useRef, useState } from 'react'
 import styles from './ImagePicker.module.scss'
 import { IconTrash } from '@tabler/icons-react';
-import { uploadImages as uploadImagesService, deleteImage as deleteImageService } from '../../services/upload';
-import type { RequestIntentResponse } from '../../types/upload.type';
+import { uploadImages as uploadImagesService, deleteImage as deleteImageService } from '@/services/upload';
+import type { RequestIntentResponse } from '@/types/upload.type';
 interface ImagePickerProps {
     uploadIntent?:RequestIntentResponse
     errorMessage?:string;
