@@ -8,23 +8,27 @@ interface ImagePickerProps {
     errorMessage?:string;
     onChange?: (files: File[], selectedImages:SelectedImage[]) => void;
     name?: string;
+    defaultSelectedImages?: SelectedImage[];
 }
 export interface SelectedImage {
     id:number;
     name:string,
     url:string
 }
-const ImagePicker = ({onChange, errorMessage, uploadIntent}: ImagePickerProps) => {
-    console.log(uploadIntent);
+const ImagePicker = ({onChange, errorMessage, uploadIntent, defaultSelectedImages}: ImagePickerProps) => {
+    console.log("defaultSelectedImages", defaultSelectedImages);
     
     const fileRef = useRef<HTMLInputElement>(null)
     const [isDragging, setIsDragging] = useState<boolean>(false)
-    const [selectedImages, setSelectedImages] = useState<SelectedImage[]>([])
+    const [selectedImages, setSelectedImages] = useState<SelectedImage[]>(defaultSelectedImages || [])
     const [selectedImagesFiles, setSelectedImagesFiles] = useState<File[]>([])
     
     useEffect(() => {
+        // if( defaultSelectedImages && defaultSelectedImages.length > 0) {
+        //     setSelectedImages(defaultSelectedImages)
+        // }
         onChange?.(selectedImagesFiles, selectedImages)
-    }, [selectedImagesFiles, selectedImages, onChange])
+    }, [selectedImagesFiles, selectedImages, onChange, defaultSelectedImages])
     
     const onUploadFile = async (event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -62,7 +66,7 @@ const ImagePicker = ({onChange, errorMessage, uploadIntent}: ImagePickerProps) =
                            {
                                 id: uploadedImage.id,
                                name: uploadedImage.name,
-                               url: `http://localhost:3000${uploadedImage.imagePath}`
+                               url: uploadedImage.imagePath
                            }
                        ]
                    })
@@ -135,7 +139,7 @@ const ImagePicker = ({onChange, errorMessage, uploadIntent}: ImagePickerProps) =
                     {
                         selectedImages.map(selectedImage => 
                         <div className={styles['selected-image']} key={selectedImage.name}>
-                            <img src={selectedImage.url} alt={selectedImage.name} />
+                            <img src={`http://localhost:3000${selectedImage.url}`} alt={selectedImage.name} />
                             <div className={styles['delete-icon']} onClick={(event) => deleteImage(event, selectedImage.id)}>
                                 <IconTrash size={16} color='white' />
                             </div>

@@ -1,22 +1,9 @@
-.new-event-wrapper {
-    @apply container mx-auto;
-    .new-event {
-        .new-event-title {
-            @apply text-xl font-bold;
-            color: var(--primary-color);
-        }
-        @apply flex flex-col gap-5;
-        .new-event-form {
-            @apply container flex  gap-5;
-            .side-wrapper {
-                @apply flex flex-col gap-5 flex-1;
-            }
-            .event-form-item {
-                @apply flex flex-col gap-2 font-bold;
-            }
-        }
-        .submit-btn-wrapper {
-            @apply  my-5 mx-auto;
-        }
+.new-event-form {
+    @apply container flex flex-col lg:flex-row gap-5;
+    .side-wrapper {
+        @apply flex flex-col gap-5 flex-1;
+    }
+    .event-form-item {
+        @apply flex flex-col gap-2 font-bold;
     }
 }

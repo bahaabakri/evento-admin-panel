@@ -13,7 +13,7 @@ export function useHttp() {
   const [error, setError] = useState<null | string>(null);
 
     const request = useCallback(async <T = unknown>(
-    method: 'get' | 'post' | 'put' | 'delete',
+    method: 'get' | 'post' | 'put' | 'delete' | 'patch',
     url: string,
     data?: unknown,
     config?: RequestConfig

@@ -1,4 +1,5 @@
 import type { Pagination } from "@/types/pagination.type";
+import { SelectedImage } from "@/UI/ImagePicker/ImagePicker";
 
 export interface MyEvent {
     id: number;
@@ -10,7 +11,7 @@ export interface MyEvent {
     lat: number;
     isActive: boolean;
     isApproved: boolean;
-    imagesUrls: string[];
+    images: SelectedImage[];
     createdAt: Date;
     updatedAt: Date;
     createdAdminId: number;

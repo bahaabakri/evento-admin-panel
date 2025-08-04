@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 
 const request = async <T = unknown>(
-  method: 'get' | 'post' | 'put' | 'delete',
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch',
   url: string,
   data?: unknown,
   config?: { [key: string]: unknown }

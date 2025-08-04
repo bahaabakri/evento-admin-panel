@@ -64,10 +64,12 @@ type Props = {
   onSubmit: (data: EventFormData, imageIds: string[]) => void;
   defaultValues: EventFormData;
   isPending?: boolean;
+  defaultSelectedImages?: SelectedImage[];
 };
 
-const EventForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
-  const [imageError, setImageError] = useState<string>();
+const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedImages }: Props) => {
+  console.log("defaultValues", defaultValues);
+    const [imageError, setImageError] = useState<string>();
   const [uploadIntent, setUploadIntent] = useState<RequestIntentResponse>();
   const [imagesIds, setImagesIds] = useState<string[]>([]);
   const [lng, setLng] = useState<number>();
@@ -86,6 +88,7 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
   console.log("watch", watch('date'));
   // useEffect hook to request intent api
   useEffect(() => {
+    // setImagesIds(defaultSelectedImages.map((el) => el.id.toString()));
     requestUploadImageIntent();
   }, []);
   const requestUploadImageIntent = async () => {
@@ -99,7 +102,7 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
   const handleOnChangePicker = useCallback(
     (files: File[], selectedImages: SelectedImage[]) => {
       // once change in image picker please check error message
-      checkImagesValidation(files);
+      checkImagesValidation(files, selectedImages);
       if (!imageError) {
         setImagesIds(selectedImages.map((el) => el.id.toString()));
       }
@@ -110,7 +113,8 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
    *
    * @param files * @description This function is used to check the validation of the images.
    */
-  const checkImagesValidation = (files: File[]) => {
+  const checkImagesValidation = (files: File[], selectedImages: SelectedImage[]) => {
+    if(selectedImages && selectedImages.length > 0) return;
     setImageError(() => {
       if (files.length <= 0) return "Please upload at least one image";
       if (!files.every((el) => el.type.startsWith("image/")))
@@ -227,6 +231,7 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
           >
             <label>Images:</label>
             <ImagePicker
+                defaultSelectedImages={defaultSelectedImages}
               uploadIntent={uploadIntent}
               onChange={handleOnChangePicker}
               errorMessage={imageError}

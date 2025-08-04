@@ -3,6 +3,7 @@ import MainLayout from "@/Layout/Layout"
 import EventPage from "@/pages/Events/Events"
 import HomePage from "@/pages/Home/Home"
 import AddEventPage from "@/pages/Events/add/AddEvent"
+import EditEventPage from "./pages/Events/edit/EditEvent"
 
 
 const MainRouterProvider = () => {
@@ -14,6 +15,7 @@ const MainRouterProvider = () => {
             <Route path="events">
                 <Route index element={<EventPage/>} />
                 <Route path="add" element={<AddEventPage />} />
+                <Route path="edit/:eventId" element={<EditEventPage />} />
             </Route>
           </Route>
         </Routes>

@@ -38,7 +38,7 @@ const EventPage = () => {
     }, [])
 
     const handleEdit =(row: MyEvent) => {
-        console.log("Edit event", row.id);
+        navigate(`/events/edit/${row.id}`);
     }
     const onClickDeleteButton = async(row: MyEvent) => {
         // Implement delete functionality here
@@ -77,10 +77,10 @@ const EventPage = () => {
             columns={eventsColumns}
               renderActions={(row) => (
             <div className="flex gap-2">
-                <ThemeIcon variant="light" color="blue" size={30} onClick={() => handleEdit(row)}>
+                <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => handleEdit(row)}>
                     <IconEdit color="blue" size={18} />
                 </ThemeIcon>
-                <ThemeIcon variant="light" color="red" size={30} onClick={() => onClickDeleteButton(row)}>
+                <ThemeIcon variant="light" color="red" className="cursor-pointer" size={30} onClick={() => onClickDeleteButton(row)}>
                     <IconTrash color="red" size={18} />
                 </ThemeIcon>
             </div>
