@@ -1,15 +1,14 @@
 import styles from "./EditEvent.module.scss";
 import { useEffect, useState } from "react";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import type { CustomAlertType } from "@/types/alert";
-import { useNavigate, useParams } from "react-router-dom";
-import { showSuccessToast } from "@/services/toast";
+import { useParams } from "react-router-dom";
 import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
 // import dayjs from "dayjs";
 import { Loader } from "@mantine/core";
 import { SelectedImage } from "@/UI/ImagePicker/ImagePicker";
 import { MyEvent } from "../events.type";
+import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 // import * as dayjs from "dayjs";
 
 /**
@@ -18,14 +17,13 @@ import { MyEvent } from "../events.type";
  * @returns
  */
 const EditEventPage = () => {
-  const [alert, setAlert] = useState<CustomAlertType | null>(null);
+  const { alert, handleError: handleErrorUpdatingEvent, handleSuccess: handleSuccessUpdatingEvent, setAlert } = useHandleErrorSuccess()
   const [defaultValues, setDefaultValues] = useState<EventFormData | null>(
     null
   );
   const [defaultSelectedImages, setDefaultSelectedImages] = useState<
     SelectedImage[]
   >([]);
-  const navigate = useNavigate();
   const { eventId } = useParams();
   const { loading, error: errorMessage, request } = useHttp();
   /*** action form hook */
@@ -54,35 +52,11 @@ const EditEventPage = () => {
       imagesIds,
     });
     if (res) {
-      handleSuccessAddingEvent("Updated Event Successfully");
+      handleSuccessUpdatingEvent("Updated Event Successfully", '/events');
     } else {
       // handle error
-      handleErrorAddingEvent(errorMessage);
+      handleErrorUpdatingEvent(errorMessage);
     }
-  };
-  ////////////////// helper methods /////////////////
-  /**
-   * To handle adding event success
-   * @param message
-   */
-  const handleSuccessAddingEvent = (message: string) => {
-    showSuccessToast(message);
-    navigate("/events");
-  };
-
-  /**
-   * To handle adding event error
-   * @param message
-   */
-  const handleErrorAddingEvent = (message: string) => {
-    setAlert({
-      type: "error",
-      title: "Error",
-      message,
-    });
-    setTimeout(() => {
-      setAlert(null);
-    }, 5000);
   };
   return (
     <div className={styles["new-event-wrapper"]}>

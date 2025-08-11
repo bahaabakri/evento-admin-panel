@@ -1,12 +1,9 @@
 import styles from "./AddEvent.module.scss";
-import { useState } from "react";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import type { CustomAlertType } from "@/types/alert";
-import { useNavigate } from "react-router-dom";
-import { showSuccessToast } from "@/services/toast";
 import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
 import dayjs from "dayjs";
+import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 // import * as dayjs from "dayjs";
 
 /**
@@ -15,8 +12,7 @@ import dayjs from "dayjs";
  * @returns
  */
 const AddEventPage = () => {
-  const [alert, setAlert] = useState<CustomAlertType | null>(null);
-  const navigate = useNavigate();
+  const { alert, handleError: handleErrorAddingEvent, handleSuccess: handleSuccessAddingEvent, setAlert } = useHandleErrorSuccess()
   const {loading, error:errorMessage, request} = useHttp()
   /*** action form hook */
   // console.log(watch("date"))
@@ -29,36 +25,14 @@ const AddEventPage = () => {
         imagesIds
     })
     if (res) {
-      handleSuccessAddingEvent('Created Event Successfully');
+      handleSuccessAddingEvent('Created Event Successfully', '/events');
     } else {
       // handle error
       handleErrorAddingEvent(errorMessage);
     }
   };
   ////////////////// helper methods /////////////////
-  /**
-   * To handle adding event success
-   * @param message 
-   */
-    const handleSuccessAddingEvent = (message:string) => {
-          showSuccessToast(message);
-          navigate('/events');
-    }
 
-    /**
-     * To handle adding event error
-     * @param message 
-     */
-    const handleErrorAddingEvent = (message:string) => {
-        setAlert({
-            type: "error",
-            title: "Error",
-            message
-        });
-        setTimeout(() => {
-            setAlert(null);
-        }, 5000);
-    }
   return (
     <div className={styles["new-event-wrapper"]}>
       <div className={styles["new-event"]}>

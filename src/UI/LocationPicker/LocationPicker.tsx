@@ -77,7 +77,7 @@ export default function LocationPicker({
       <MapContainer
         center={[position.lat, position.lng]}
         zoom={13}
-        style={{ height: '400px', width: '100%', position: 'relative' }}
+        style={{ height: '400px', width: '100%', position: 'relative', zIndex: 99 }}
       >
         <CustomButton onClick={handleGetLocation} className={`${classes.currentPosition}`}>
             <IconCurrentLocation />

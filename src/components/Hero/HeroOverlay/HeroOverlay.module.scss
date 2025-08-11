@@ -1,0 +1,12 @@
+.hero-section-overlay {
+    background-color: #000;
+    @apply w-full h-full;
+    .image-slider {
+        @apply w-full h-full;
+        opacity: 0.5;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        // animation: slideInOut 10s linear 2s infinite;
+    }
+}
