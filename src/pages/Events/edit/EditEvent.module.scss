@@ -6,8 +6,5 @@
             color: var(--primary-color);
         }
         @apply flex flex-col gap-5;
-        .submit-btn-wrapper {
-            @apply  my-5 mx-auto;
-        }
     }
 }

@@ -16,16 +16,16 @@ const schema = yup.object({
     otp: yup.string().required("Otp is required")
 });
 const LoginRegister: React.FC = () => {
-    const { loading: isPending, error: errorMessage, request } = useHttp();
+    const { loading: isPending, request } = useHttp();
     const { alert, handleError: handleErrorLoginReg, handleSuccess: handleSuccessLoginReg, setAlert } = useHandleErrorSuccess()
     const {
         control,
         handleSubmit,
         setValue,
         formState: { isValid },
-    } = useForm<{ otp: string, email:string }>({
+    } = useForm<{ otp: string, email: string }>({
         resolver: yupResolver(schema),
-        mode: "onBlur",
+        mode: "onChange",
         defaultValues: {
             otp: "",
             email: ""
@@ -37,12 +37,11 @@ const LoginRegister: React.FC = () => {
         setValue("email", email || "");
     });
     const verify = async (formData: { otp: string }) => {
-        const res = await request("post", "admin/auth/verify", formData);
-        if (res) {
+        try {
+            await request("post", "admin/auth/verify", formData);
             handleSuccessLoginReg("Login Successfully", '/');
-        } else {
-            // handle error
-            handleErrorLoginReg(errorMessage);
+        } catch (err) {
+            handleErrorLoginReg(err.message);
         }
     };
     return (

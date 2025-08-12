@@ -15,7 +15,7 @@ const schema = yup.object({
     .required("Email is required"),
 });
 const LoginRegister: React.FC = () => {
-  const { loading: isPending, error: errorMessage, request } = useHttp();
+  const { loading: isPending,  request } = useHttp();
   const { alert, handleError: handleErrorLoginReg, handleSuccess: handleSuccessLoginReg, setAlert } = useHandleErrorSuccess()
   const {
     control,
@@ -23,18 +23,19 @@ const LoginRegister: React.FC = () => {
     formState: { isValid },
   } = useForm<{ email: string }>({
     resolver: yupResolver(schema),
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
       email: "",
     },
   });
   const loginRegister = async (formData: { email: string }) => {
-    const res = await request("post", "admin/auth/loginRegister", formData);
-    if (res) {
+    try {
+      await request("post", "admin/auth/loginRegister", formData);
       handleSuccessLoginReg("Otp has been sent successfully", `/auth/otp?email=${formData.email}`);
-    } else {
+    }
+    catch(err) {
       // handle error
-      handleErrorLoginReg(errorMessage);
+      handleErrorLoginReg(err?.message || 'Something went wrong');
     }
   };
   return (

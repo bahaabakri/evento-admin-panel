@@ -37,7 +37,7 @@ export function useHttp() {
         message = err.message;
       }
       setError(message);
-      return null;
+      throw new Error(message)
     } finally {
       setLoading(false);
     }
