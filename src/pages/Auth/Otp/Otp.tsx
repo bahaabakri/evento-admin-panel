@@ -8,6 +8,9 @@ import styles from "./Otp.module.scss"
 import * as yup from "yup";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
+import { VerifyOtpResponse } from "../auth.type";
+import { useDispatch } from "react-redux";
+import { setAuthenticatedUser } from "@/store/authSlice";
 const schema = yup.object({
     email: yup
         .string()
@@ -31,6 +34,7 @@ const LoginRegister: React.FC = () => {
             email: ""
         },
     });
+    const dispatch = useDispatch()
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const email = queryParams.get("email");
@@ -38,8 +42,12 @@ const LoginRegister: React.FC = () => {
     });
     const verify = async (formData: { otp: string }) => {
         try {
-            await request("post", "admin/auth/verify", formData);
-            handleSuccessLoginReg("Login Successfully", '/');
+            const res = await request<VerifyOtpResponse>("post", "admin/auth/verify", formData);
+            dispatch(setAuthenticatedUser({
+                user: res.user,
+                access_token: res.access_token
+            }));
+            handleSuccessLoginReg(res.message || "Login Successfully", '/');
         } catch (err) {
             handleErrorLoginReg(err.message);
         }
@@ -85,3 +93,4 @@ const LoginRegister: React.FC = () => {
 };
 
 export default LoginRegister;
+

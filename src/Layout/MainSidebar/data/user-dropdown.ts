@@ -1,5 +1,5 @@
 import type { DropDownItem } from "@/types/dropdown-Item.type";
-import {IconCheckbox, IconSettings, IconUser } from "@tabler/icons-react";
+import {IconCheckbox, IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
 const userDropDownMenu: DropDownItem[] = [
   { icon: IconUser,
     label: "Profile",
@@ -25,6 +25,7 @@ const userDropDownMenu: DropDownItem[] = [
     ]},
   { icon: IconUser, label: "Contacts" },
   { icon: IconSettings, label: "Settings" },
+  { icon: IconLogout, label: "Logout", link: '/auth/logout' },
 ];
 
 export default userDropDownMenu;

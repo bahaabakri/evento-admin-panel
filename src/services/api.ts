@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAuthToken } from './auth-cookie';
 // import { getAuthToken } from './auth-cookie';
 
 const axiosInstance = axios.create({
@@ -6,16 +7,16 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // withCredentials: true, // for sending cookies to the server
+  withCredentials: true, // for sending cookies to the server
 });
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use((config) => {
-  // const token = getAuthToken() ; // read token from cookie
+  const token = getAuthToken() ; // read token from cookie
 
-  // if (token) {
-  //   config.headers.Authorization = `Bearer ${token}`;
-  // }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   return config;
 });

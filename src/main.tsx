@@ -10,6 +10,8 @@ import {MantineProvider } from '@mantine/core'
 import { theme } from './theme/theme';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 // import { ThemeVariables } from './theme/ThemeVariables.tsx';
 // import { ThemeVariables } from './theme/ThemeVariables.tsx'
 createRoot(document.getElementById('root')!).render(
@@ -20,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
     >
       <ModalsProvider>
           <Notifications position="top-right" zIndex={2077} />
-          <App />
+          <Provider store={store}>
+            <App/>
+        </Provider>
       </ModalsProvider>
       {/* <ThemeVariables/> */}
     </MantineProvider>

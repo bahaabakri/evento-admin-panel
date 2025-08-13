@@ -1,5 +1,5 @@
 import { showSuccessToast } from "@/services/toast";
-import { CustomAlertType } from "@/types/alert";
+import { CustomAlertType } from "@/types/alert.type";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

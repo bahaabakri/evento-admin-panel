@@ -27,6 +27,10 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, link, is
   };
 
   const handleClick = () => {
+    if(!hasLinks && link) {
+      navigate(link)
+      return
+    }
     if (trigger === 'click') {
       if(hasLinks) {
         setOpened((o) => !o);

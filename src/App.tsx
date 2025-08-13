@@ -1,6 +1,6 @@
 
 import './App.scss'
-import MainRouterProvider from './Router'
+import MainRouterProvider from './routes/Router'
 function App() {
 
   return (

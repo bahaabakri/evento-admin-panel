@@ -10,5 +10,6 @@ export interface DropDownItem {
     label: string;
     link: string;
   }[];
+  link?: string;
   notifications?: number;
 }

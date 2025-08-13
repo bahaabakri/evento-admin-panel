@@ -1,4 +1,4 @@
-import { CustomAlertType } from "@/types/alert";
+import { CustomAlertType } from "@/types/alert.type";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import React, { ReactElement } from "react";
 import styles from "./AuthLayout.module.scss";
