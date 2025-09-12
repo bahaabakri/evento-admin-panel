@@ -3,17 +3,27 @@
   & > div {
     @apply flex-1;
   }
+  .overlay-wrapper {
+    @apply hidden md:block;
+  }
   .auth-wrapper {
     @apply flex justify-center items-center;
     .auth {
-      max-width: 400px;
       padding: 2rem;
-      @apply flex flex-col gap-2;
+      max-width: 500px;
+      @apply flex flex-col gap-2 w-full;
       .auth-title {
         @apply font-bold;
       }
       .auth-subtitle {
         @apply text-slate-400 text-sm;
+      }
+      .auth-footer {
+        @apply text-sm text-center mt-4;
+        a {
+          @apply text-blue-600 hover:underline;
+          cursor: pointer;
+        }
       }
     }
   }

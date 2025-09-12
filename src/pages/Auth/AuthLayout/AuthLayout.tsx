@@ -7,13 +7,15 @@ import Logo from "@/components/Logo/Logo";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { useDispatch } from "react-redux";
 import { clearAlert } from "@/store/alertSlice";
+import { Link } from "react-router-dom";
 
 interface AuthLayoutProps {
     children:ReactElement;
     title: string;
     subtitle:string;
+    type: "login" | "register";
 }
-const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle}) => {
+const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, type}) => {
   const { alert } = useHandleErrorSuccess();
   const dispatch = useDispatch();
   
@@ -36,6 +38,15 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle}) => 
             />
           )}
           {children}
+          {type === "login" ? (
+            <div className={styles['auth-footer']}>
+              Don't have an account? <Link to="/auth/register">Register</Link>
+            </div>
+          ) : (
+            <div className={styles['auth-footer']}>
+              Already have an account? <Link to="/auth/login">Login</Link>
+            </div>
+          ) }
         </div>
       </div>
     </div>

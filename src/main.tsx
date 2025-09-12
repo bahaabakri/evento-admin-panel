@@ -5,6 +5,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import 'leaflet/dist/leaflet.css';
+import "react-phone-number-input/style.css";
 import App from './App'
 import {MantineProvider } from '@mantine/core'
 import { theme } from './theme/theme';
