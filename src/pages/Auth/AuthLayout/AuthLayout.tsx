@@ -4,15 +4,19 @@ import React, { ReactElement } from "react";
 import styles from "./AuthLayout.module.scss";
 import HeroOverlay from "@/components/Hero/HeroOverlay/HeroOverlay";
 import Logo from "@/components/Logo/Logo";
+import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
+import { useDispatch } from "react-redux";
+import { clearAlert } from "@/store/alertSlice";
 
 interface AuthLayoutProps {
     children:ReactElement;
     title: string;
     subtitle:string;
-    alert:CustomAlertType | null
-    setAlert:(el) => void
 }
-const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, alert, setAlert}) => {
+const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle}) => {
+  const { alert } = useHandleErrorSuccess();
+  const dispatch = useDispatch();
+  
   return (
     <div className={styles["auth-container"]}>
       <div className={styles["overlay-wrapper"]}>
@@ -25,7 +29,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, aler
           <p className={styles['auth-subtitle']}>{subtitle}</p>
           {alert && (
             <CustomAlert
-              onClose={() => setAlert(null)}
+              onClose={() => dispatch(clearAlert())}
               title={alert.title}
               message={alert.message}
               type={alert.type}

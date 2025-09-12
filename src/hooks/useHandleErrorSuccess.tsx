@@ -1,10 +1,13 @@
 import { showSuccessToast } from "@/services/toast";
+import { clearAlert, setAlert } from "@/store/alertSlice";
+import { RootState } from "@/store/store";
 import { CustomAlertType } from "@/types/alert.type";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export function useHandleErrorSuccess() {
-    const [alert, setAlert] = useState<CustomAlertType | null>(null);
+    const {alert} = useSelector((state: RootState) => state.alert);
+    const dispatch = useDispatch()
     const navigate = useNavigate();
       /**
        * To handle adding event success
@@ -19,16 +22,16 @@ export function useHandleErrorSuccess() {
        * @param message 
        */
       const handleError = (message: string) => {
-        setAlert({
+        dispatch(setAlert({
           type: "error",
           title: "Error",
           message
-        });
+        }))
         setTimeout(() => {
-          setAlert(null);
+          dispatch(clearAlert())
         }, 5000);
       }
       return {
-        alert, setAlert, handleSuccess, handleError
+        alert, handleSuccess, handleError
       }
 }

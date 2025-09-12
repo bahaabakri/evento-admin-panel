@@ -16,7 +16,7 @@ const schema = yup.object({
 });
 const LoginRegister: React.FC = () => {
   const { loading: isPending,  request } = useHttp();
-  const { alert, handleError: handleErrorLoginReg, handleSuccess: handleSuccessLoginReg, setAlert } = useHandleErrorSuccess()
+  const { handleError: handleErrorLoginReg, handleSuccess: handleSuccessLoginReg } = useHandleErrorSuccess()
   const {
     control,
     handleSubmit,
@@ -40,8 +40,6 @@ const LoginRegister: React.FC = () => {
   };
   return (
     <AuthLayout
-      alert={alert}
-      setAlert={setAlert}
       title="Login or Register"
       subtitle="Become a member by registering with your email address, or log in to access your account.">
       <form
