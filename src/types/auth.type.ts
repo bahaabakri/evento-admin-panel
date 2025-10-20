@@ -12,3 +12,4 @@ export interface RegisterPayload {
   email: string;
   phone: string; 
 }
+

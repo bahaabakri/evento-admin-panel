@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   });
   const login = async (formData: { email: string }) => {
     try {
-      await request("post", "admin/auth/loginRegister", formData);
+      await request("post", "admin/auth/login", formData);
       handleSuccessLoginReg("Otp has been sent successfully", `/auth/otp?email=${formData.email}`);
     }
     catch(err) {

@@ -9,7 +9,7 @@ import * as yup from "yup";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { RegisterPayload } from "../auth.type";
+import { RegisterPayload } from "../../../types/auth.type";
 import CustomPhoneField from "@/UI/CustomPhoneField/CustomPhoneField";
 const schema = yup.object({
     firstname: yup
@@ -51,9 +51,9 @@ const Login: React.FC = () => {
             phone: "",
         },
     });
-    const register = async (formData: { email: string }) => {
+    const register = async (formData: RegisterPayload) => {
         try {
-            await request("post", "admin/auth/loginRegister", formData);
+            await request("post", "admin/auth/register", formData);
             handleSuccessLoginReg("Otp has been sent successfully", `/auth/otp?email=${formData.email}`);
         }
         catch (err) {

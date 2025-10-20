@@ -32,6 +32,6 @@ export function useHandleErrorSuccess() {
         }, 5000);
       }
       return {
-        alert, handleSuccess, handleError
+        alert, handleSuccess, handleError, setAlert
       }
 }

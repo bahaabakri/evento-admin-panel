@@ -4,6 +4,7 @@ import { useModals } from '@mantine/modals';
 export function useConfirmModal() {
   const modals = useModals();
 
+  const closeConfirmModal = () => modals.closeAll();
   const openConfirmModal = ({
     title = 'Are you sure?',
     message = 'This action cannot be undone.',
@@ -29,5 +30,5 @@ export function useConfirmModal() {
     });
   };
 
-  return { openConfirmModal };
+  return { openConfirmModal, closeConfirmModal };
 }

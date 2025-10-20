@@ -32,8 +32,8 @@ export const checkIsAuthenticated = createAsyncThunk(
         throw new Error('Token expired');
       }
 
-      const res = await request<{ user: User }>('get', 'users/me');
-      return res.user;
+      const res = await request<User>('get', 'users/me');
+      return res;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       return thunkAPI.rejectWithValue('Unauthorized');

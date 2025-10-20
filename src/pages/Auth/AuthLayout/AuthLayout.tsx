@@ -1,6 +1,6 @@
 import { CustomAlertType } from "@/types/alert.type";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styles from "./AuthLayout.module.scss";
 import HeroOverlay from "@/components/Hero/HeroOverlay/HeroOverlay";
 import Logo from "@/components/Logo/Logo";
@@ -16,13 +16,13 @@ interface AuthLayoutProps {
     type: "login" | "register";
 }
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, type}) => {
-  const { alert } = useHandleErrorSuccess();
+  const { alert } = useHandleErrorSuccess()
   const dispatch = useDispatch();
-  
+
   return (
     <div className={styles["auth-container"]}>
       <div className={styles["overlay-wrapper"]}>
-        <HeroOverlay />
+          <HeroOverlay />
       </div>
       <div className={styles["auth-wrapper"]}>
         <div className={styles['auth']}>

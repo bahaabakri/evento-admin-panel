@@ -9,6 +9,8 @@ import LogoutPage from "@/pages/Auth/Logout/Logout";
 import { authLoader } from "./loaders/auth-loader";
 import Login from "@/pages/Auth/Login/Login";
 import Register from "@/pages/Auth/Register/Register";
+import PendingAccountPage from "@/pages/Auth/PendingAccountPage/PendingAccountPage";
+import RejectedAccountPage from "@/pages/Auth/RejectedAccountPage/RejectedAccountPage";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,8 @@ const router = createBrowserRouter([
       { path: "auth/login", element: <Login /> },
       { path: "auth/otp", element: <Otp /> },
       { path: "auth/logout", element: <LogoutPage /> },
+      { path: "auth/pending", element: <PendingAccountPage /> },
+      { path: "auth/rejected", element: <RejectedAccountPage /> },
     ],
   },
 ]);
