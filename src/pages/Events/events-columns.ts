@@ -3,11 +3,11 @@ import type { MyEvent } from "./events.type";
 
 const eventsColumns: Column<MyEvent>[] = [
     
-  { header: "Name", accessor: "name", type: 'string' },
-  { header: "Date", accessor: "date", type: 'date' },
-  { header: "Location", accessor: "location", type: 'string' },
-{ header: "Is Active", accessor: "isActive", type: 'boolean' },
-  { header: "Is Approved", accessor: "isApproved", type: 'boolean' }
+  { header: "Name", accessor: "name", type: {kind:'string'} },
+  { header: "Date", accessor: "date", type: {kind: 'date'} },
+  { header: "Location", accessor: "location", type: {kind:'string'} },
+{ header: "Is Active", accessor: "isActive", type: {kind: 'boolean'} },
+  { header: "Is Approved", accessor: "isApproved",type: {kind: 'boolean'}}
 
 ]
 

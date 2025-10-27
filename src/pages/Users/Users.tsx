@@ -1,68 +1,68 @@
 import { useEffect, useState } from "react"
 import MainTable from "@/UI/MainTable/MainTable"
 import { useHttp } from "@/hooks/useHttp"
-import type { MyEvent } from "./events.type"
-import eventsColumns from "./events-columns"
 import {Pagination, ThemeIcon } from "@mantine/core"
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react"
 import { useNavigate } from "react-router-dom"
 import CustomButton from "@/UI/CustomButton/CustomButton"
 import { useConfirmModal } from "@/hooks/useConfirmModal"
 import { showErrorToast, showSuccessToast } from "@/services/toast"
+import { User } from "@/types/user.type"
 import { MyResponse } from "@/types/response.type."
+import usersColumns from "./users-columns"
 // import { useDisclosure } from "@mantine/hooks"
 
-const EventsPage = () => {
+const UsersPage = () => {
     // const [opened, { open, close }] = useDisclosure(false); 
     const [activePage, setPage] = useState(1);
     const [numOfPages, setNumOfPages] = useState(1);
     const {loading, error:errorMessage, request} = useHttp()
-    const [events, setEvents] = useState<MyEvent[]>([])
+    const [users, setUsers] = useState<User[]>([])
     const navigate = useNavigate()
     const { openConfirmModal } = useConfirmModal();
     
-    const fetchAllEvents = async(page:number = 1, perPage:number = 10) => {
+    const fetchAllUsers = async(page:number = 1, perPage:number = 10) => {
         setPage(page)
-        const res = await request<MyResponse<MyEvent>>('get', `admin/events?page=${page}&perPage=${perPage}`)
+        const res = await request<MyResponse<User>>('get', `admin/users/users?page=${page}&perPage=${perPage}`)
         if(res) {
             const {data, meta} = res
             const {perPage, total} = meta
             setNumOfPages(Math.ceil(total / perPage))
-            setEvents(data)
+            setUsers(data)
         }
     };
-    const navigateToAddEvent = () => {
-        navigate('/events/add')
+    const navigateToAddUser = () => {
+        navigate('/users/add')
     }
     useEffect(() => {
-        fetchAllEvents();
+        fetchAllUsers();
     }, [])
 
-    const handleEdit =(row: MyEvent) => {
-        navigate(`/events/edit/${row.id}`);
+    const navigateToEditUser =(row: User) => {
+        navigate(`/users/edit/${row.id}`);
     }
-    const onClickDeleteButton = async(row: MyEvent) => {
+    const onClickDeleteButton = async(row: User) => {
         // Implement delete functionality here
         
         openConfirmModal({
-            title: 'Delete item?',
-            message: 'Are you sure you want to delete this item? This cannot be undone.',
+            title: 'Delete user?',
+            message: 'Are you sure you want to delete this user? This cannot be undone.',
             onConfirm: () => handleDelete(row),
             confirmLabel: 'Delete',
             color: 'red',
         });
     }
 
-    const handleDelete = async (row: MyEvent) => {
+    const handleDelete = async (row: User) => {
         try {
-            const res = await request('delete', `admin/events/${row.id}`)
+            const res = await request('delete', `admin/users/users/${row.id}`)
             if (res) {
                 // Optionally, you can refetch the events after deletion
-                showSuccessToast('Event deleted successfully');
-                fetchAllEvents(activePage);
+                showSuccessToast('User deleted successfully');
+                fetchAllUsers(activePage);
             }
         } catch (error) {
-            showErrorToast(error instanceof Error ? error.message : 'Failed to delete event');
+            showErrorToast(error instanceof Error ? error.message : 'Failed to delete user');
         }
     }
     return (
@@ -71,14 +71,14 @@ const EventsPage = () => {
         {/* Modal content */}
         {/* </Modal> */}
         <MainTable 
-            title={'All Events'}
+            title={'All Users'}
             loading={loading} 
-            data={events} 
+            data={users} 
             errorMessage={errorMessage}
-            columns={eventsColumns}
+            columns={usersColumns}
               renderActions={(row) => (
             <div className="flex gap-2">
-                <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => handleEdit(row)}>
+                <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => navigateToEditUser(row)}>
                     <IconEdit color="blue" size={18} />
                 </ThemeIcon>
                 <ThemeIcon variant="light" color="red" className="cursor-pointer" size={30} onClick={() => onClickDeleteButton(row)}>
@@ -87,17 +87,17 @@ const EventsPage = () => {
             </div>
   )}
         >
-            <CustomButton onClick={navigateToAddEvent} leftSection={<IconPlus size={14} />}>
-                <div>Add New Event</div>
+            <CustomButton onClick={navigateToAddUser} leftSection={<IconPlus size={14} />}>
+                <div>Add New User</div>
             </CustomButton>
         </MainTable>
         {
-            !loading && events && events.length > 0 && 
-            <Pagination className="m-auto w-fit" value={activePage} onChange={(page) => fetchAllEvents(page)} total={numOfPages} />
+            !loading && users && users.length > 0 && 
+            <Pagination className="m-auto w-fit" value={activePage} onChange={(page) => fetchAllUsers(page)} total={numOfPages} />
         }
     </div>
 
     )
 }
 
-export default EventsPage
+export default UsersPage

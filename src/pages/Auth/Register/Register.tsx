@@ -9,7 +9,7 @@ import * as yup from "yup";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { RegisterPayload } from "../../../types/auth.type";
+import { RegisterPayload } from "../auth.type";
 import CustomPhoneField from "@/UI/CustomPhoneField/CustomPhoneField";
 const schema = yup.object({
     firstname: yup

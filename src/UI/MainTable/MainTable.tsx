@@ -4,21 +4,27 @@ import classes from './MainTable.module.scss'
 import cx from 'clsx';
 import { transformIsoDateToReadable } from "@/services/date";
 import { IconSquareRoundedX, IconChecks } from "@tabler/icons-react";
-export interface Column<T> {
+import { StatusObj } from "@/types/status.type";
+import { transformStringToReadable } from "@/services/format";
+type ColumnType<T, StatusEnum> =
+  | { kind: 'string' | 'boolean' | 'date' }
+  | { kind: 'status'; values: StatusObj<StatusEnum>[] };
+
+export interface Column<T, StatusEnum = never> {
   header: string;
   accessor: keyof T;
-  type: 'boolean' | 'date' | 'string'
+  type: ColumnType<T, StatusEnum>;
 }
-interface MainTableProps<T> {
+interface MainTableProps<T, StatusEnum> {
   title?: string;
   data: T[];
-  columns: Column<T>[];
+  columns: Column<T, StatusEnum>[];
   loading:boolean;
   errorMessage:string | null;
   children:ReactElement;
   renderActions?: (row: T, rowIndex: number) => ReactElement;
 }
-const MainTable = <T,>({children, title, data, columns, loading, errorMessage, renderActions }: MainTableProps<T>) => {
+const MainTable = <T,StatusEnum>({children, title, data, columns, loading, errorMessage, renderActions }: MainTableProps<T, StatusEnum>) => {
   const [scrolled, setScrolled] = useState(false);
 
   const rows = data.map((row, rowIndex) => (
@@ -26,12 +32,16 @@ const MainTable = <T,>({children, title, data, columns, loading, errorMessage, r
       {columns.map((col) => (
         <Table.Td key={String(col.accessor)}>
             {
-                col.type == 'date' ? transformIsoDateToReadable(String(row[col.accessor]))
-                : col.type == 'boolean' ? 
+                col.type.kind == 'date' ? transformIsoDateToReadable(String(row[col.accessor]))
+                : col.type.kind == 'boolean' ? 
                 row[col.accessor] ? 
                 <IconChecks color="var(--mantine-color-success-5)" /> : 
                 <IconSquareRoundedX color="var(--mantine-color-error-5)"/>
-                : String(row[col.accessor])
+                : col.type.kind == 'string'
+                ? transformStringToReadable(row[col.accessor])
+                : col.type.kind === 'status' 
+                && 
+                <span className={`text-${col.type.values.find(el => el.name === String(row[col.accessor]))?.status}-5`}>{String(row[col.accessor])}</span>
             }
         </Table.Td>
       ))}

@@ -1,0 +1,10 @@
+.new-user-wrapper {
+    @apply container mx-auto;
+    .new-user {
+        .new-user-title {
+            @apply text-xl font-bold;
+            color: var(--primary-color);
+        }
+        @apply flex flex-col gap-5;
+    }
+}

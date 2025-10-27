@@ -8,7 +8,7 @@ import styles from "./Otp.module.scss"
 import * as yup from "yup";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import { VerifyOtpResponse } from "../../../types/auth.type";
+import { VerifyOtpResponse } from "../auth.type";
 import { useDispatch } from "react-redux";
 import { setAuthenticatedUser } from "@/store/authSlice";
 const schema = yup.object({

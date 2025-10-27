@@ -2,6 +2,11 @@ import type { DropDownItem } from "@/types/dropdown-Item.type";
 import { IconBulb, IconCalendarEvent, IconCheckbox, IconClearAll, IconClock, IconClockX, IconUser } from "@tabler/icons-react";
 const mainSidebarMenu: DropDownItem[] = [
   {
+    icon: IconUser,
+    label: "Users Management",
+    link: "/users"
+  },
+  {
     icon: IconBulb,
     label: "Activity",
     notifications: 3,

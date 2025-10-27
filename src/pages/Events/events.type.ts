@@ -16,8 +16,3 @@ export interface MyEvent {
     updatedAt: Date;
     createdAdminId: number;
 }
-
-export interface MyEventResponse {
-    data: MyEvent[];
-    meta: Pagination;
-}

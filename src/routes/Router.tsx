@@ -11,22 +11,38 @@ import Login from "@/pages/Auth/Login/Login";
 import Register from "@/pages/Auth/Register/Register";
 import PendingAccountPage from "@/pages/Auth/PendingAccountPage/PendingAccountPage";
 import RejectedAccountPage from "@/pages/Auth/RejectedAccountPage/RejectedAccountPage";
+import EventsPage from "@/pages/Events/Events";
+import UsersPage from "@/pages/Users/Users";
+import AddUserPage from "@/pages/Users/add/AddUser";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     children: [
-      { index: true, element: <HomePage />, loader: authLoader },
       {
-        path: "events",
         loader: authLoader,
         children: [
-          { index: true, element: <EventPage /> },
-          { path: "add", element: <AddEventPage /> },
-          { path: "edit/:eventId", element: <EditEventPage /> },
+          { index: true, element: <HomePage /> },
+          {
+            path: "events",
+            children: [
+              { index: true, element: <EventsPage /> },
+              { path: "add", element: <AddEventPage /> },
+              { path: "edit/:eventId", element: <EditEventPage /> },
+            ],
+          },
+          {
+            path: "users",
+            children: [
+              { index: true, element: <UsersPage /> },
+              { path: "add", element: <AddUserPage /> },
+              // { path: "edit/:eventId", element: <EditEventPage /> },
+            ],
+          },
         ],
       },
+
       { path: "auth/register", element: <Register /> },
       { path: "auth/login", element: <Login /> },
       { path: "auth/otp", element: <Otp /> },
