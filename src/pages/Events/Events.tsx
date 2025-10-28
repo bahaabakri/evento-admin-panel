@@ -9,23 +9,23 @@ import { useNavigate } from "react-router-dom"
 import CustomButton from "@/UI/CustomButton/CustomButton"
 import { useConfirmModal } from "@/hooks/useConfirmModal"
 import { showErrorToast, showSuccessToast } from "@/services/toast"
-import { MyResponse } from "@/types/response.type."
+import { MyResponsePagination } from "@/types/response.type."
 // import { useDisclosure } from "@mantine/hooks"
 
 const EventsPage = () => {
     // const [opened, { open, close }] = useDisclosure(false); 
     const [activePage, setPage] = useState(1);
     const [numOfPages, setNumOfPages] = useState(1);
-    const {loading, error:errorMessage, request} = useHttp()
+    const {loading, request, errorMessage} = useHttp()
     const [events, setEvents] = useState<MyEvent[]>([])
     const navigate = useNavigate()
     const { openConfirmModal } = useConfirmModal();
     
     const fetchAllEvents = async(page:number = 1, perPage:number = 10) => {
         setPage(page)
-        const res = await request<MyResponse<MyEvent>>('get', `admin/events?page=${page}&perPage=${perPage}`)
-        if(res) {
-            const {data, meta} = res
+        const {data: dataRes} = await request<MyResponsePagination<MyEvent>>('get', `admin/events?page=${page}&perPage=${perPage}`)
+        if(dataRes) {
+            const {data, meta} = dataRes
             const {perPage, total} = meta
             setNumOfPages(Math.ceil(total / perPage))
             setEvents(data)

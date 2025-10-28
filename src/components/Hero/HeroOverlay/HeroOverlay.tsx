@@ -8,7 +8,7 @@ const HeroOverlay: FC = () => {
     
     const [selectedHeroImageIndex, setSelectedHeroImageIndex] =
     useState<number>(0);
-    const { request, loading: loadingHero, error: errorFetchingHero } = useHttp();
+    const { request, loading: loadingHero } = useHttp();
     const [activeHeroImages, setActiveHeroImages] =
     useState<SelectedImage[]>(null);
     console.log(activeHeroImages);
@@ -17,14 +17,14 @@ const HeroOverlay: FC = () => {
   }, []);
   const getActiveHeroData = async () => {
     // Placeholder for potential future logic
-    const res = (await request(
+    const {data, error} = (await request<HeroResponse>(
       "get",
       "admin/heros/activeHero"
-    )) as HeroResponse;
-    if (res) {
-      setActiveHeroImages(res.images);
-    } else if (errorFetchingHero) {
-      console.error("Error fetching active hero data:", errorFetchingHero);
+    ));
+    if(error) {
+      console.error("Error fetching active hero data:", error);
+    } else {
+      setActiveHeroImages(data.images);
     }
   };
   useEffect(() => {

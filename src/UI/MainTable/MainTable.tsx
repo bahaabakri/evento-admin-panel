@@ -41,7 +41,9 @@ const MainTable = <T,StatusEnum>({children, title, data, columns, loading, error
                 ? transformStringToReadable(row[col.accessor])
                 : col.type.kind === 'status' 
                 && 
-                <span className={`text-${col.type.values.find(el => el.name === String(row[col.accessor]))?.status}-5`}>{String(row[col.accessor])}</span>
+                <span className={`capitalize text-${col.type.values.find(el => el.name === String(row[col.accessor]))?.status}-5`}>
+                  {String(row[col.accessor])}
+                </span>
             }
         </Table.Td>
       ))}

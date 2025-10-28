@@ -8,27 +8,37 @@ import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { useDispatch } from "react-redux";
 import { clearAlert } from "@/store/alertSlice";
 import { Link } from "react-router-dom";
+import CustomButton from "@/UI/CustomButton/CustomButton";
+import { useHttp } from "@/hooks/useHttp";
 
 interface AuthLayoutProps {
-    children:ReactElement;
-    title: string;
-    subtitle:string;
-    type: "login" | "register";
+  children: ReactElement;
+  title: string;
+  subtitle: string;
+  type: "login" | "register" | "otp";
+  onResendOtp?: () => void;
+  isPendingResendOtp?: boolean;
 }
-const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, type}) => {
-  const { alert } = useHandleErrorSuccess()
+const AuthLayout: React.FC<AuthLayoutProps> = ({
+  children,
+  title,
+  subtitle,
+  type,
+  onResendOtp,
+  isPendingResendOtp,
+}) => {
+  const { alert } = useHandleErrorSuccess();
   const dispatch = useDispatch();
-
   return (
     <div className={styles["auth-container"]}>
       <div className={styles["overlay-wrapper"]}>
-          <HeroOverlay />
+        <HeroOverlay />
       </div>
       <div className={styles["auth-wrapper"]}>
-        <div className={styles['auth']}>
+        <div className={styles["auth"]}>
           <Logo />
-          <h2 className={styles['auth-title']}>{title}</h2>
-          <p className={styles['auth-subtitle']}>{subtitle}</p>
+          <h2 className={styles["auth-title"]}>{title}</h2>
+          <p className={styles["auth-subtitle"]}>{subtitle}</p>
           {alert && (
             <CustomAlert
               onClose={() => dispatch(clearAlert())}
@@ -39,14 +49,26 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, type
           )}
           {children}
           {type === "login" ? (
-            <div className={styles['auth-footer']}>
+            <div className={styles["auth-footer"]}>
               Don't have an account? <Link to="/auth/register">Register</Link>
             </div>
-          ) : (
-            <div className={styles['auth-footer']}>
+          ) : type === "register" ? (
+            <div className={styles["auth-footer"]}>
               Already have an account? <Link to="/auth/login">Login</Link>
             </div>
-          ) }
+          ) : (
+            <div className={styles["auth-footer"]}>
+              Didn't receive otp?
+              <CustomButton
+                isLinkDesign={true}
+                onClick={onResendOtp}
+                isPending={isPendingResendOtp}
+                disabled={isPendingResendOtp}
+              >
+                <div>Resend</div>
+              </CustomButton>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import CustomTextField from "@/UI/CustomTextField/CustomTextField";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import styles from "./Login.module.scss"
+import styles from "./Login.module.scss";
 import * as yup from "yup";
 import AuthLayout from "../AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
@@ -15,8 +15,11 @@ const schema = yup.object({
     .required("Email is required"),
 });
 const Login: React.FC = () => {
-  const { loading: isPending,  request } = useHttp();
-  const { handleError: handleErrorLoginReg, handleSuccess: handleSuccessLoginReg } = useHandleErrorSuccess()
+  const { loading: isPending, request } = useHttp();
+  const {
+    handleError: handleErrorLogin,
+    handleSuccess: handleSuccessLogin,
+  } = useHandleErrorSuccess();
   const {
     control,
     handleSubmit,
@@ -29,31 +32,31 @@ const Login: React.FC = () => {
     },
   });
   const login = async (formData: { email: string }) => {
-    try {
-      await request("post", "admin/auth/login", formData);
-      handleSuccessLoginReg("Otp has been sent successfully", `/auth/otp?email=${formData.email}`);
-    }
-    catch(err) {
-      // handle error
-      handleErrorLoginReg(err?.message || 'Something went wrong');
+    const { data, error } = await request("post", "admin/auth/login", formData);
+    if (error) {
+      handleErrorLogin(error);
+    } else {
+      handleSuccessLogin(
+        "Otp has been sent successfully",
+        `/auth/otp?email=${formData.email}`
+      );
     }
   };
   return (
     <AuthLayout
       type="login"
       title="Login"
-      subtitle="Login to access your account.">
-      <form
-        className={styles['login-form']}
-        onSubmit={handleSubmit(login)}>
+      subtitle="Login to access your account."
+    >
+      <form className={styles["login-form"]} onSubmit={handleSubmit(login)}>
         <div style={{ marginBottom: "1rem" }}>
-          <label htmlFor="email">Email:</label>
           <Controller
             name="email"
             control={control}
             render={({ field, fieldState }) => (
               <CustomTextField
                 {...field}
+                label="Email"
                 placeholder="Enter Email address"
                 errorMessage={
                   fieldState.isTouched && fieldState.error
@@ -73,7 +76,6 @@ const Login: React.FC = () => {
         </CustomButton>
       </form>
     </AuthLayout>
-
   );
 };
 

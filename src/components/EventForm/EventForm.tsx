@@ -50,14 +50,14 @@ const schema = yup.object({
     .max(90, "Latitude must be ≤ 90"),
 });
 
-export type  EventFormData = {
-    date: string;
-    name: string;
-    location: string;
-    description: string;
-    lat: number;
-    lng: number;
-}
+export type EventFormData = {
+  date: string;
+  name: string;
+  location: string;
+  description: string;
+  lat: number;
+  lng: number;
+};
 
 type Props = {
   mode: "add" | "edit";
@@ -67,9 +67,15 @@ type Props = {
   defaultSelectedImages?: SelectedImage[];
 };
 
-const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedImages }: Props) => {
+const EventForm = ({
+  mode,
+  onSubmit,
+  defaultValues,
+  isPending,
+  defaultSelectedImages,
+}: Props) => {
   console.log("defaultValues", defaultValues);
-    const [imageError, setImageError] = useState<string>();
+  const [imageError, setImageError] = useState<string>();
   const [uploadIntent, setUploadIntent] = useState<RequestIntentResponse>();
   const [imagesIds, setImagesIds] = useState<string[]>([]);
   const [lng, setLng] = useState<number>();
@@ -85,7 +91,7 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
-  console.log("watch", watch('date'));
+  console.log("watch", watch("date"));
   // useEffect hook to request intent api
   useEffect(() => {
     // setImagesIds(defaultSelectedImages.map((el) => el.id.toString()));
@@ -113,8 +119,11 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
    *
    * @param files * @description This function is used to check the validation of the images.
    */
-  const checkImagesValidation = (files: File[], selectedImages: SelectedImage[]) => {
-    if(selectedImages && selectedImages.length > 0) return;
+  const checkImagesValidation = (
+    files: File[],
+    selectedImages: SelectedImage[]
+  ) => {
+    if (selectedImages && selectedImages.length > 0) return;
     setImageError(() => {
       if (files.length <= 0) return "Please upload at least one image";
       if (!files.every((el) => el.type.startsWith("image/")))
@@ -137,7 +146,6 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
           <div
             className={`${styles["event-name-wrapper"]} ${styles["event-form-item"]}`}
           >
-            <label>Name:</label>
             <Controller
               control={control}
               name="name"
@@ -145,6 +153,7 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
                 <CustomTextField
                   {...field}
                   placeholder="Enter Event Name"
+                  label="Name"
                   errorMessage={
                     fieldState.isTouched && fieldState.error
                       ? fieldState.error.message
@@ -157,13 +166,13 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
           <div
             className={`${styles["event-location-wrapper"]} ${styles["event-form-item"]}`}
           >
-            <label>Location:</label>
             <Controller
               name="location"
               control={control}
               render={({ field, fieldState }) => (
                 <CustomTextField
                   {...field}
+                  label="Location"
                   placeholder="Enter Event Location"
                   errorMessage={
                     fieldState.isTouched && fieldState.error
@@ -187,7 +196,6 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
           <div
             className={`${styles["event-desc-wrapper"]} ${styles["event-form-item"]}`}
           >
-            <label>Description:</label>
             <Controller
               name="description"
               control={control}
@@ -195,6 +203,7 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
                 <CustomTextarea
                   {...field}
                   placeholder="Enter Event Description"
+                  label="Description"
                   rows={4}
                   errorMessage={
                     fieldState.isTouched && fieldState.error
@@ -210,13 +219,13 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
           <div
             className={`${styles["event-date-time-wrapper"]} ${styles["event-form-item"]}`}
           >
-            <label>Event Date:</label>
             <Controller
               control={control}
               name="date"
               render={({ field, fieldState }) => (
                 <CustomDateTimePicker
                   {...field}
+                  label="Event Date"
                   errorMessage={
                     fieldState.isTouched && fieldState.error
                       ? fieldState.error.message
@@ -229,9 +238,9 @@ const EventForm = ({ mode, onSubmit, defaultValues, isPending, defaultSelectedIm
           <div
             className={`${styles["event-img-wrapper"]} ${styles["event-form-item"]}`}
           >
-            <label>Images:</label>
             <ImagePicker
-                defaultSelectedImages={defaultSelectedImages}
+              label="Images"
+              defaultSelectedImages={defaultSelectedImages}
               uploadIntent={uploadIntent}
               onChange={handleOnChangePicker}
               errorMessage={imageError}

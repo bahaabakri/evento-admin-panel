@@ -13,22 +13,22 @@ import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
  */
 const AddEventPage = () => {
   const { alert, handleError: handleErrorAddingEvent, handleSuccess: handleSuccessAddingEvent, setAlert } = useHandleErrorSuccess()
-  const {loading, error:errorMessage, request} = useHttp()
+  const {loading, request} = useHttp()
   /*** action form hook */
   // console.log(watch("date"))
   const handleAdd = async (formData: EventFormData, imagesIds: string[]) => {
     console.log("formData", formData);
     console.log("imageIds", imagesIds);
-    const res = await request('post', 'admin/events', {
+    const {data, error} = await request('post', 'admin/events', {
         ...formData,
         // date: dayjs(formData.date).toISOString(),
         imagesIds
     })
-    if (res) {
+    if(error) {
+      handleErrorAddingEvent(error);
+    }
+    else {
       handleSuccessAddingEvent('Created Event Successfully', '/events');
-    } else {
-      // handle error
-      handleErrorAddingEvent(errorMessage);
     }
   };
   ////////////////// helper methods /////////////////

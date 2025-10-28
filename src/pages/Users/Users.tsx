@@ -8,7 +8,7 @@ import CustomButton from "@/UI/CustomButton/CustomButton"
 import { useConfirmModal } from "@/hooks/useConfirmModal"
 import { showErrorToast, showSuccessToast } from "@/services/toast"
 import { User } from "@/types/user.type"
-import { MyResponse } from "@/types/response.type."
+import { MyResponsePagination } from "@/types/response.type."
 import usersColumns from "./users-columns"
 // import { useDisclosure } from "@mantine/hooks"
 
@@ -16,16 +16,16 @@ const UsersPage = () => {
     // const [opened, { open, close }] = useDisclosure(false); 
     const [activePage, setPage] = useState(1);
     const [numOfPages, setNumOfPages] = useState(1);
-    const {loading, error:errorMessage, request} = useHttp()
+    const {loading, errorMessage, request} = useHttp()
     const [users, setUsers] = useState<User[]>([])
     const navigate = useNavigate()
     const { openConfirmModal } = useConfirmModal();
     
     const fetchAllUsers = async(page:number = 1, perPage:number = 10) => {
         setPage(page)
-        const res = await request<MyResponse<User>>('get', `admin/users/users?page=${page}&perPage=${perPage}`)
-        if(res) {
-            const {data, meta} = res
+        const {data:dataRes} = await request<MyResponsePagination<User>>('get', `admin/users/users?page=${page}&perPage=${perPage}`)
+        if(dataRes) {
+            const {data, meta} = dataRes
             const {perPage, total} = meta
             setNumOfPages(Math.ceil(total / perPage))
             setUsers(data)
@@ -78,9 +78,9 @@ const UsersPage = () => {
             columns={usersColumns}
               renderActions={(row) => (
             <div className="flex gap-2">
-                <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => navigateToEditUser(row)}>
+                {/* <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => navigateToEditUser(row)}>
                     <IconEdit color="blue" size={18} />
-                </ThemeIcon>
+                </ThemeIcon> */}
                 <ThemeIcon variant="light" color="red" className="cursor-pointer" size={30} onClick={() => onClickDeleteButton(row)}>
                     <IconTrash color="red" size={18} />
                 </ThemeIcon>

@@ -1,6 +1,6 @@
 import { Pagination } from "./pagination.type";
 
-export type  MyResponse<T> =  {
+export type  MyResponsePagination<T> =  {
     data: T[];
     meta: Pagination
 }

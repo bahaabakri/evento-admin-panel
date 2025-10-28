@@ -13,9 +13,9 @@ export function useHandleErrorSuccess() {
        * To handle adding event success
        * @param message
        */
-      const handleSuccess = (message: string, path :string = '/auth') => {
+      const handleSuccess = (message: string, path :string| null = null) => {
         showSuccessToast(message);
-        navigate(path);
+        if(path) navigate(path);
       };
       /**
        * To handle adding event error

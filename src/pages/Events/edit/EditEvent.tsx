@@ -25,7 +25,8 @@ const EditEventPage = () => {
     SelectedImage[]
   >([]);
   const { eventId } = useParams();
-  const { loading, error: errorMessage, request } = useHttp();
+  const { loading: loadingEditEvent, request:requestEditEvent } = useHttp();
+  const { loading: loadingEventData, request: requestEventData } = useHttp();
   /*** action form hook */
   // console.log(watch("date"))
   useEffect(() => {
@@ -35,10 +36,10 @@ const EditEventPage = () => {
   }, []);
 
   const fetchEventDetails = async (id: string) => {
-    const res = await request<MyEvent>("get", `admin/events/${id}`);
-    if (res) {
+    const {data} = await requestEventData<MyEvent>("get", `admin/events/${id}`);
+    if (data) {
       // Populate the form with the fetched event data
-      const { images, ...rest } = res;
+      const { images, ...rest } = data;
       setDefaultValues(rest);
       setDefaultSelectedImages(images);
     }
@@ -46,16 +47,16 @@ const EditEventPage = () => {
   const handleEdit = async (formData: EventFormData, imagesIds: string[]) => {
     console.log("formData", formData);
     console.log("imageIds", imagesIds);
-    const res = await request("patch", `admin/events/${eventId}`, {
+    const {error} = await requestEditEvent("patch", `admin/events/${eventId}`, {
       ...formData,
       // date: dayjs(formData.date).toISOString(),
       imagesIds,
     });
-    if (res) {
-      handleSuccessUpdatingEvent("Updated Event Successfully", '/events');
-    } else {
+    if (error) {
       // handle error
-      handleErrorUpdatingEvent(errorMessage);
+      handleErrorUpdatingEvent(error);
+    } else {
+      handleSuccessUpdatingEvent("Updated Event Successfully", '/events');
     }
   };
   return (
@@ -81,7 +82,7 @@ const EditEventPage = () => {
             mode="edit"
             defaultValues={defaultValues}
             defaultSelectedImages={defaultSelectedImages}
-            isPending={loading}
+            isPending={loadingEditEvent}
             onSubmit={handleEdit}
           />
         ) : (

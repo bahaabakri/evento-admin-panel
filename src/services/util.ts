@@ -4,4 +4,12 @@ function toTitleCase(str: string): string {
     .replace(/^./, (char) => char.toUpperCase()); // capitalize first letter
 }
 
-export {toTitleCase}
+function filterDataToSend(data) {
+  return Object.fromEntries(
+    Object.entries(data).filter(([_, value]) => 
+      value !== "" && value !== null && value !== undefined
+    )
+  );
+}
+
+export {toTitleCase, filterDataToSend}
