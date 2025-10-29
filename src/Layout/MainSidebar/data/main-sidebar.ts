@@ -1,10 +1,15 @@
 import type { DropDownItem } from "@/types/dropdown-Item.type";
-import { IconBulb, IconCalendarEvent, IconCheckbox, IconClearAll, IconClock, IconClockX, IconUser } from "@tabler/icons-react";
+import { IconBulb, IconCalendarEvent, IconCheckbox, IconClearAll, IconClock, IconClockX, IconUser, IconUserCog } from "@tabler/icons-react";
 const mainSidebarMenu: DropDownItem[] = [
   {
     icon: IconUser,
     label: "Users Management",
     link: "/users"
+  },
+    {
+    icon: IconUserCog,
+    label: "Admins Management",
+    link: "/admins"
   },
   {
     icon: IconBulb,

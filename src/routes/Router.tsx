@@ -14,6 +14,10 @@ import RejectedAccountPage from "@/pages/Auth/RejectedAccountPage/RejectedAccoun
 import EventsPage from "@/pages/Events/Events";
 import UsersPage from "@/pages/Users/Users";
 import AddUserPage from "@/pages/Users/add/AddUser";
+import EditUserPage from "@/pages/Users/edit/EditUser";
+import AdminsPage from "@/pages/Admins/Admins";
+import AddAdminPage from "@/pages/Admins/add/AddAdmin";
+import EditAdminPage from "@/pages/Admins/edit/EditAdmin";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +41,15 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <UsersPage /> },
               { path: "add", element: <AddUserPage /> },
-              // { path: "edit/:eventId", element: <EditEventPage /> },
+              { path: "edit/:userId", element: <EditUserPage /> },
+            ],
+          },
+                 {
+            path: "admins",
+            children: [
+              { index: true, element: <AdminsPage /> },
+              { path: "add", element: <AddAdminPage /> },
+              { path: "edit/:adminId", element: <EditAdminPage /> },
             ],
           },
         ],

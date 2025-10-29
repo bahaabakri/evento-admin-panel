@@ -1,12 +1,9 @@
-import styles from "./AddUser.module.scss";
+import styles from "./AddAdmin.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
-import dayjs from "dayjs";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import UserForm, { UserFormData } from "@/components/UserForm/UserForm";
-import { filterDataToSend } from "@/services/util";
-import userFormSchema from "@/form-schemas/user-form-schema";
+import adminFormSchema from "@/form-schemas/admin-form-schema";
 // import * as dayjs from "dayjs";
 
 /**
@@ -14,11 +11,11 @@ import userFormSchema from "@/form-schemas/user-form-schema";
  * @description This component is used to add a new event.
  * @returns
  */
-const AddUserPage = () => {
+const AddAdminPage = () => {
   const {
     alert,
-    handleError: handleErrorAddingUser,
-    handleSuccess: handleSuccessAddingUser,
+    handleError: handleErrorAddingAdmin,
+    handleSuccess: handleSuccessAddingAdmin,
     setAlert,
   } = useHandleErrorSuccess();
   const { loading, request } = useHttp();
@@ -27,22 +24,22 @@ const AddUserPage = () => {
   const handleAdd = async (formData: UserFormData) => {
     console.log("formData", formData);
 
-    const { data, error } = await request("post", "admin/users/users", {
+    const { data, error } = await request("post", "admin/users/admins", {
       ...formData,
     });
     if (error) {
       // handle error
-      handleErrorAddingUser(error);
+      handleErrorAddingAdmin(error);
     } else {
-      handleSuccessAddingUser("Created User Successfully", "/users");
+      handleSuccessAddingAdmin("Created Admin Successfully", "/admins");
     }
   };
   ////////////////// helper methods /////////////////
 
   return (
-    <div className={styles["new-user-wrapper"]}>
-      <div className={styles["new-user"]}>
-        <h1 className={styles["new-user-title"]}>Add New User</h1>
+    <div className={styles["new-admin-wrapper"]}>
+      <div className={styles["new-admin"]}>
+        <h1 className={styles["new-admin-title"]}>Add New Admin</h1>
         {alert && (
           <CustomAlert
             onClose={() => setAlert(null)}
@@ -58,7 +55,7 @@ const AddUserPage = () => {
 
         )} */}
         <UserForm
-          schema={userFormSchema}
+          schema={adminFormSchema}
           mode="add"
           defaultValues={{
             email: "",
@@ -74,4 +71,4 @@ const AddUserPage = () => {
   );
 };
 
-export default AddUserPage;
+export default AddAdminPage;

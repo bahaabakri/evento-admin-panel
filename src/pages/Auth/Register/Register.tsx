@@ -11,41 +11,17 @@ import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { RegisterPayload } from "../auth.type";
 import CustomPhoneField from "@/UI/CustomPhoneField/CustomPhoneField";
-const schema = yup.object({
-  firstname: yup
-    .string()
-    .min(2, "Firstname must be at least 2 characters")
-    .required("Firstname is required"),
-  lastname: yup
-    .string()
-    .min(2, "Lastname must be at least 2 characters")
-    .required("Lastname is required"),
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  phone: yup
-    .string()
-    .required("Phone number is required")
-    .test("is-valid-phone", "Phone number is not valid", (value) => {
-      if (!value) return false;
-      // Parse without specifying a default region for international support
-      const phoneNumber = parsePhoneNumberFromString(value);
-      return phoneNumber?.isValid() ?? false;
-    }),
-});
+import adminFormSchema from "@/form-schemas/admin-form-schema";
 const Login: React.FC = () => {
   const { loading: isPending, request } = useHttp();
-  const {
-    handleError: handleErrorReg,
-    handleSuccess: handleSuccessReg,
-  } = useHandleErrorSuccess();
+  const { handleError: handleErrorReg, handleSuccess: handleSuccessReg } =
+    useHandleErrorSuccess();
   const {
     control,
     handleSubmit,
     formState: { isValid },
   } = useForm<RegisterPayload>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(adminFormSchema),
     mode: "onChange",
     defaultValues: {
       firstname: "",
@@ -55,15 +31,19 @@ const Login: React.FC = () => {
     },
   });
   const register = async (formData: RegisterPayload) => {
-      const {data, error} = await request("post", "admin/auth/register", formData);
-      if(error) {
-          handleErrorReg(error);
-      } else {
-          handleSuccessReg(
-            "Otp has been sent successfully",
-            `/auth/otp?email=${formData.email}`
-          );
-      }
+    const { data, error } = await request(
+      "post",
+      "admin/auth/register",
+      formData
+    );
+    if (error) {
+      handleErrorReg(error);
+    } else {
+      handleSuccessReg(
+        "Otp has been sent successfully",
+        `/auth/otp?email=${formData.email}`
+      );
+    }
   };
   return (
     <AuthLayout

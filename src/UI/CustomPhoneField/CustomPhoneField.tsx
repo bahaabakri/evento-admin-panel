@@ -32,7 +32,7 @@ const CustomPhoneField = forwardRef<HTMLInputElement, CustomPhoneFieldProps>(
         <PhoneInput
           ref={ref as any}
           value={value}
-          onChange={onChange}
+          onChange={(val) => onChange(val ?? "")} // ✅ convert undefined → ""
           defaultCountry="US"
           international
           withCountryCallingCode

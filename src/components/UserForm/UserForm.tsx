@@ -7,7 +7,7 @@ import styles from "./UserForm.module.scss";
 import CustomTextField from "@/UI/CustomTextField/CustomTextField";
 import CustomButton from "@/UI/CustomButton/CustomButton";
 import CustomPhoneField from "@/UI/CustomPhoneField/CustomPhoneField";
-import userFormSchema from "./user-form-schema";
+import { isFieldRequired } from "@/services/form";
 
 export type UserFormData = {
   email: string;
@@ -21,20 +21,20 @@ type Props = {
   onSubmit: (data: UserFormData) => void;
   defaultValues: UserFormData;
   isPending?: boolean;
+schema: yup.ObjectSchema<any>; // 👈 new
+
 };
 
-const UserForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
+const UserForm = ({ mode, onSubmit, defaultValues, isPending, schema }: Props) => {
   console.log("defaultValues", defaultValues);
   const {
     control,
     handleSubmit,
-    setValue,
-    watch,
     formState: { isValid },
   } = useForm<UserFormData>({
     defaultValues,
     mode: "onBlur",
-    resolver: yupResolver(userFormSchema),
+    resolver: yupResolver(schema),
   });
 
   const submitHandler = (formData: UserFormData) => {
@@ -52,7 +52,7 @@ const UserForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
               render={({ field, fieldState }) => (
                 <CustomTextField
                   {...field}
-                  isRequired={false}
+                  isRequired={isFieldRequired(schema, field.name)}
                   label="Firstname"
                   placeholder="Enter Firstname"
                   errorMessage={
@@ -71,6 +71,7 @@ const UserForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
               render={({ field, fieldState }) => (
                 <CustomTextField
                   {...field}
+                  isRequired={isFieldRequired(schema, field.name)}
                   label="Email"
                   placeholder="Enter Email Name"
                   errorMessage={
@@ -91,7 +92,7 @@ const UserForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
               render={({ field, fieldState }) => (
                 <CustomTextField
                   {...field}
-                  isRequired={false}
+                  isRequired={isFieldRequired(schema, field.name)}
                   placeholder="Enter Lastname"
                   label="Lastname"
                   errorMessage={
@@ -110,7 +111,7 @@ const UserForm = ({ mode, onSubmit, defaultValues, isPending }: Props) => {
               render={({ field, fieldState }) => (
                 <CustomPhoneField
                   {...field}
-                  isRequired={false}
+                  isRequired={isFieldRequired(schema, field.name)}
                   label="Phone"
                   placeholder="Enter Phone Number"
                   errorMessage={

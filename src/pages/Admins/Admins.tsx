@@ -9,44 +9,44 @@ import { useConfirmModal } from "@/hooks/useConfirmModal"
 import { showErrorToast, showSuccessToast } from "@/services/toast"
 import { User } from "@/types/user.type"
 import { MyResponsePagination } from "@/types/response.type."
-import usersColumns from "./users-columns"
+import adminsColumns from "./admins-columns"
 // import { useDisclosure } from "@mantine/hooks"
 
-const UsersPage = () => {
+const AdminsPage = () => {
     // const [opened, { open, close }] = useDisclosure(false); 
     const [activePage, setPage] = useState(1);
     const [numOfPages, setNumOfPages] = useState(1);
     const {loading, errorMessage, request} = useHttp()
-    const [users, setUsers] = useState<User[]>([])
+    const [admins, setAdmins] = useState<User[]>([])
     const navigate = useNavigate()
     const { openConfirmModal } = useConfirmModal();
     
-    const fetchAllUsers = async(page:number = 1, perPage:number = 10) => {
+    const fetchAllAdmins = async(page:number = 1, perPage:number = 10) => {
         setPage(page)
-        const {data:dataRes} = await request<MyResponsePagination<User>>('get', `admin/users/users?page=${page}&perPage=${perPage}`)
+        const {data:dataRes} = await request<MyResponsePagination<User>>('get', `admin/users/admins?page=${page}&perPage=${perPage}`)
         if(dataRes) {
             const {data, meta} = dataRes
             const {perPage, total} = meta
             setNumOfPages(Math.ceil(total / perPage))
-            setUsers(data)
+            setAdmins(data)
         }
     };
-    const navigateToAddUser = () => {
-        navigate('/users/add')
+    const navigateToAddAdmin = () => {
+        navigate('/admins/add')
     }
     useEffect(() => {
-        fetchAllUsers();
+        fetchAllAdmins();
     }, [])
 
-    const navigateToEditUser =(row: User) => {
-        navigate(`/users/edit/${row.id}`);
+    const navigateToEditAdmin =(row: User) => {
+        navigate(`/admins/edit/${row.id}`);
     }
     const onClickDeleteButton = async(row: User) => {
         // Implement delete functionality here
         
         openConfirmModal({
-            title: 'Delete user?',
-            message: 'Are you sure you want to delete this user? This cannot be undone.',
+            title: 'Delete admin?',
+            message: 'Are you sure you want to delete this admin? This cannot be undone.',
             onConfirm: () => handleDelete(row),
             confirmLabel: 'Delete',
             color: 'red',
@@ -55,14 +55,14 @@ const UsersPage = () => {
 
     const handleDelete = async (row: User) => {
         try {
-            const res = await request('delete', `admin/users/users/${row.id}`)
+            const res = await request('delete', `admin/users/admins/${row.id}`)
             if (res) {
                 // Optionally, you can refetch the events after deletion
-                showSuccessToast('User deleted successfully');
-                fetchAllUsers(activePage);
+                showSuccessToast('Admin deleted successfully');
+                fetchAllAdmins(activePage);
             }
         } catch (error) {
-            showErrorToast(error instanceof Error ? error.message : 'Failed to delete user');
+            showErrorToast(error instanceof Error ? error.message : 'Failed to delete admin');
         }
     }
     return (
@@ -73,12 +73,12 @@ const UsersPage = () => {
         <MainTable 
             title={'All Users'}
             loading={loading} 
-            data={users} 
+            data={admins} 
             errorMessage={errorMessage}
-            columns={usersColumns}
+            columns={adminsColumns}
               renderActions={(row) => (
             <div className="flex gap-2">
-                <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => navigateToEditUser(row)}>
+                <ThemeIcon variant="light" color="blue" className="cursor-pointer" size={30} onClick={() => navigateToEditAdmin(row)}>
                     <IconEdit color="blue" size={18} />
                 </ThemeIcon>
                 <ThemeIcon variant="light" color="red" className="cursor-pointer" size={30} onClick={() => onClickDeleteButton(row)}>
@@ -87,17 +87,17 @@ const UsersPage = () => {
             </div>
   )}
         >
-            <CustomButton onClick={navigateToAddUser} leftSection={<IconPlus size={14} />}>
+            <CustomButton onClick={navigateToAddAdmin} leftSection={<IconPlus size={14} />}>
                 <div>Add New User</div>
             </CustomButton>
         </MainTable>
         {
-            !loading && users && users.length > 0 && 
-            <Pagination className="m-auto w-fit" value={activePage} onChange={(page) => fetchAllUsers(page)} total={numOfPages} />
+            !loading && admins && admins.length > 0 && 
+            <Pagination className="m-auto w-fit" value={activePage} onChange={(page) => fetchAllAdmins(page)} total={numOfPages} />
         }
     </div>
 
     )
 }
 
-export default UsersPage
+export default AdminsPage
