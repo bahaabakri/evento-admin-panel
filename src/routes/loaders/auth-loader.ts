@@ -23,7 +23,7 @@ export async function authLoader() {
 
   // 🧩 Check verification and status
   if (user && !user.isVerified) {
-    throw redirect("/auth/otp");
+      throw redirect("/auth/login");
   }
 
   if (user && user.status === UserStatus.PENDING) {

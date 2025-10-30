@@ -1,15 +1,43 @@
 import type { DropDownItem } from "@/types/dropdown-Item.type";
-import { IconBulb, IconCalendarEvent, IconCheckbox, IconClearAll, IconClock, IconClockX, IconUser, IconUserCog } from "@tabler/icons-react";
+import {
+  IconBulb,
+  IconCalendarEvent,
+  IconCheckbox,
+  IconClearAll,
+  IconClock,
+  IconClockX,
+  IconKey,
+  IconList,
+  IconSettingsCog,
+  IconUser,
+  IconUserCog,
+} from "@tabler/icons-react";
 const mainSidebarMenu: DropDownItem[] = [
   {
     icon: IconUser,
     label: "Users Management",
-    link: "/users"
+    link: "/users",
   },
-    {
+  {
     icon: IconUserCog,
     label: "Admins Management",
-    link: "/admins"
+    links: [
+      {
+        label: "All Admins",
+        link: "/admins",
+        icon: IconList
+      },
+      {
+        label: "Roles",
+        link: "/roles",
+        icon: IconSettingsCog
+      },
+      {
+        label: "Permissions",
+        link: "/permissions",
+        icon: IconKey
+      },
+    ],
   },
   {
     icon: IconBulb,
@@ -41,7 +69,7 @@ const mainSidebarMenu: DropDownItem[] = [
         link: "/",
       },
       {
-        icon:IconClockX,
+        icon: IconClockX,
         label: "Missed Events",
         link: "/",
       },
@@ -57,9 +85,9 @@ const mainSidebarMenu: DropDownItem[] = [
     label: "Tasks",
     notifications: 4,
   },
-  { 
+  {
     icon: IconUser,
-    label: "Contacts"
+    label: "Contacts",
   },
 ];
 

@@ -1,0 +1,10 @@
+.new-role-wrapper {
+    @apply container mx-auto;
+    .new-role {
+        .new-role-title {
+            @apply text-xl font-bold;
+            color: var(--primary-color);
+        }
+        @apply flex flex-col gap-5;
+    }
+}

@@ -18,6 +18,8 @@ import EditUserPage from "@/pages/Users/edit/EditUser";
 import AdminsPage from "@/pages/Admins/Admins";
 import AddAdminPage from "@/pages/Admins/add/AddAdmin";
 import EditAdminPage from "@/pages/Admins/edit/EditAdmin";
+import RolesPage from "@/pages/Roles/Roles";
+import AddRolePage from "@/pages/Roles/add/AddRole";
 
 const router = createBrowserRouter([
   {
@@ -44,12 +46,20 @@ const router = createBrowserRouter([
               { path: "edit/:userId", element: <EditUserPage /> },
             ],
           },
-                 {
+          {
             path: "admins",
             children: [
               { index: true, element: <AdminsPage /> },
               { path: "add", element: <AddAdminPage /> },
               { path: "edit/:adminId", element: <EditAdminPage /> },
+            ],
+          },
+          {
+            path: "roles",
+            children: [
+              { index: true, element: <RolesPage /> },
+              { path: "add", element: <AddRolePage /> },
+              // { path: "edit/:adminId", element: <EditAdminPage /> },
             ],
           },
         ],
