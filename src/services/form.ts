@@ -21,3 +21,15 @@ export const isFieldRequired = (
 
   return false;
 };
+/**
+ * check mantine select to be unique value
+ * @param arr 
+ * @returns 
+ */
+export const makeSelectUniqueByValue = (arr: { label: string; value: string }[]): { label: string; value: string }[] => {
+  const map = new Map<string, { label: string; value: string }>();
+  arr.forEach((item) => {
+    map.set(item.value, item);
+  });
+  return Array.from(map.values());
+}

@@ -13,6 +13,19 @@ import CustomMultiSelect from "@/UI/CustomMultiSelect/CustomMultiSelect";
 import { useEffect } from "react";
 import { useHttp } from "@/hooks/useHttp";
 import { usePermissions } from "@/hooks/userPermissions";
+import {
+  ComboboxLikeRenderOptionInput,
+  ComboboxItem,
+  ScrollArea,
+  TextInput,
+} from "@mantine/core";
+import {
+  IconChecks,
+  IconDeselect,
+  IconListCheck,
+  IconSelect,
+  IconSelectAll,
+} from "@tabler/icons-react";
 
 export type RoleFormData = {
   name: string;
@@ -45,10 +58,13 @@ const RoleForm = ({
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
-  const { permissions, search, setSearch, loadMore } = usePermissions();
+  const { permissions, search, setSearch, loadMore, loading } =
+    usePermissions();
   const submitHandler = (formData: RoleFormData) => {
     onSubmit(formData);
   };
+  console.log("permissions", permissions);
+
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
       <div className={styles["new-role-form"]}>
@@ -103,14 +119,26 @@ const RoleForm = ({
                   isRequired={isFieldRequired(schema, field.name)}
                   label="Permissions"
                   placeholder="Select Permissions"
-                  data={permissions}
+                  data={
+                    loading
+                      ? [
+                          ...permissions,
+                          { label: "Loading...", value: "__loading" , disabled: true},
+                        ]
+                      : permissions
+                  }
                   searchable
                   searchValue={search}
                   onSearchChange={setSearch}
-                  nothingFoundMessage="No permissions"
+                  nothingFoundMessage={"No permissions"}
+                  value={field.value}
+                  onChange={(val) => {
+                    field.onChange(val); // only update selected values
+                    setSearch(search);
+                  }}
                   scrollAreaProps={{
                     onBottomReached: () => {
-                      loadMore();
+                      if (!loading) loadMore();
                     },
                   }}
                   errorMessage={
