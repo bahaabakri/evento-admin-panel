@@ -1,0 +1,10 @@
+.edit-role-wrapper {
+    @apply container mx-auto;
+    .edit-role {
+        .edit-role-title {
+            @apply text-xl font-bold;
+            color: var(--primary-color);
+        }
+        @apply flex flex-col gap-5;
+    }
+}

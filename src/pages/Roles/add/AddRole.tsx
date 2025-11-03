@@ -1,13 +1,9 @@
 import styles from "./AddRole.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
-import dayjs from "dayjs";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import UserForm, { UserFormData } from "@/components/UserForm/UserForm";
-import { filterDataToSend } from "@/services/util";
-import userFormSchema from "@/form-schemas/user-form-schema";
 import RoleForm, { RoleFormData } from "@/components/RoleForm/RoleForm";
+import { roleFormSchema } from "@/form-schemas/role-form-schema";
 // import * as dayjs from "dayjs";
 
 /**
@@ -26,13 +22,16 @@ const AddRolePage = () => {
   /*** action form hook */
   // console.log(watch("date"))
   const handleAdd = async (formData: RoleFormData) => {
-    console.log("formData", formData);
-
-    const { data, error } = await request("post", "admin/roles", {
+    // console.log("formData", formData);
+    const payload = {
       ...formData,
-    });
+      permissionsIds: formData.permissions.map((p) => Number(p.value)),
+    };
+    const { data, error } = await request("post", "admin/roles", payload);
     if (error) {
       // handle error
+      // console.log('error', error);
+      
       handleErrorAddingRole(error);
     } else {
       handleSuccessAddingRole("Created Role Successfully", "/roles");
@@ -52,19 +51,13 @@ const AddRolePage = () => {
             type={alert.type}
           />
         )}
-
-        {/* {addEventFormState && addEventFormState.errorMessage && (
-        )}
-        {addEventFormState && addEventFormState.successMessage && (
-
-        )} */}
         <RoleForm
-          schema={userFormSchema}
+          schema={roleFormSchema}
           mode="add"
           defaultValues={{
             name: "",
             description: "",
-            permissionsIds: []
+            permissions: [],
           }}
           isPending={loading}
           onSubmit={handleAdd}

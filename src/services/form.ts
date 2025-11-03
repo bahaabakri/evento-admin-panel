@@ -11,25 +11,30 @@ export const isFieldRequired = (
   fieldName: string
 ): boolean => {
   const schemaDesc = schema.describe();
-  const field = schemaDesc.fields[fieldName];    
+  const field = schemaDesc.fields[fieldName];
   if (!field) return false;
 
   // Only proceed if the field has a tests array
   if ("tests" in field && Array.isArray(field.tests)) {
-    return field.tests.some(test => test.name === "required");
+    return field.tests.some((test) => test.name === "required");
   }
 
   return false;
 };
 /**
  * check mantine select to be unique value
- * @param arr 
- * @returns 
+ * @param arr
+ * @returns
  */
-export const makeSelectUniqueByValue = (arr: { label: string; value: string }[]): { label: string; value: string }[] => {
-  const map = new Map<string, { label: string; value: string }>();
+export const makeSelectUniqueByValue = (
+  arr: { label: string; value: string; disabled?: boolean }[]
+): { label: string; value: string; disabled?: boolean }[] => {
+  const map = new Map<
+    string,
+    { label: string; value: string; disabled?: boolean }
+  >();
   arr.forEach((item) => {
     map.set(item.value, item);
   });
   return Array.from(map.values());
-}
+};

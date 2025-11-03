@@ -20,6 +20,7 @@ import AddAdminPage from "@/pages/Admins/add/AddAdmin";
 import EditAdminPage from "@/pages/Admins/edit/EditAdmin";
 import RolesPage from "@/pages/Roles/Roles";
 import AddRolePage from "@/pages/Roles/add/AddRole";
+import EditRolePage from "@/pages/Roles/edit/EditRole";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <RolesPage /> },
               { path: "add", element: <AddRolePage /> },
-              // { path: "edit/:adminId", element: <EditAdminPage /> },
+              { path: "edit/:roleId", element: <EditRolePage /> },
             ],
           },
         ],

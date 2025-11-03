@@ -21,11 +21,13 @@ export function useHandleErrorSuccess() {
        * To handle adding event error
        * @param message 
        */
-      const handleError = (message: string) => {
+      const handleError = (message: string | string[]) => {
+        // console.log(message, message instanceof(Array));
+        
         dispatch(setAlert({
           type: "error",
           title: "Error",
-          message
+          message: (Array.isArray(message)) ? message.join(', ') : message
         }))
         setTimeout(() => {
           dispatch(clearAlert())

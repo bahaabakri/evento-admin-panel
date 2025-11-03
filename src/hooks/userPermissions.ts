@@ -15,7 +15,9 @@ export const usePermissions = () => {
   // 🕒 Debounce search (300ms delay)
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearch(search.trim());
+      // console.log(search);
+      
+      setDebouncedSearch(search?.trim());
       setPage(1); // reset to first page on new search
     }, 300);
 

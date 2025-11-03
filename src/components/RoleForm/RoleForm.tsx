@@ -6,31 +6,16 @@ import * as yup from "yup";
 import styles from "./RoleForm.module.scss";
 import CustomTextField from "@/UI/CustomTextField/CustomTextField";
 import CustomButton from "@/UI/CustomButton/CustomButton";
-import CustomPhoneField from "@/UI/CustomPhoneField/CustomPhoneField";
-import { isFieldRequired } from "@/services/form";
+import { isFieldRequired, makeSelectUniqueByValue } from "@/services/form";
 import CustomTextarea from "@/UI/CustomTextArea/CustomTextArea";
 import CustomMultiSelect from "@/UI/CustomMultiSelect/CustomMultiSelect";
-import { useEffect } from "react";
-import { useHttp } from "@/hooks/useHttp";
 import { usePermissions } from "@/hooks/userPermissions";
-import {
-  ComboboxLikeRenderOptionInput,
-  ComboboxItem,
-  ScrollArea,
-  TextInput,
-} from "@mantine/core";
-import {
-  IconChecks,
-  IconDeselect,
-  IconListCheck,
-  IconSelect,
-  IconSelectAll,
-} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 export type RoleFormData = {
   name: string;
   description: string;
-  permissionsIds: string[];
+  permissions: { label: string; value: string }[];
 };
 
 type Props = {
@@ -48,10 +33,12 @@ const RoleForm = ({
   isPending,
   schema,
 }: Props) => {
-  console.log("defaultValues", defaultValues);
+  // console.log("defaultValues", defaultValues);
   const {
     control,
     handleSubmit,
+    // watch,
+    setValue,
     formState: { isValid },
   } = useForm<RoleFormData>({
     defaultValues,
@@ -63,7 +50,36 @@ const RoleForm = ({
   const submitHandler = (formData: RoleFormData) => {
     onSubmit(formData);
   };
-  console.log("permissions", permissions);
+  const [selectedPermissions, setSelectedPermissions] = useState<{label: string, value:string}[]>([])
+
+  useEffect(() => {
+    setSelectedPermissions(defaultValues?.permissions)  
+  }, [defaultValues])
+  /** ⬇ Helper: merge permissions + default values + loading placeholder */
+  const getPermissionsData = () =>
+    makeSelectUniqueByValue([
+      ...permissions, // from BE
+      ...(selectedPermissions ?? []), // saved after select
+      ...(loading
+        ? [
+            {
+              label: "Loading...",
+              value: "__loading",
+              disabled: true,
+            },
+          ]
+        : []),
+    ]);
+
+  /** ⬇ Helper: map string[] from MultiSelect → { label, value }[] for form */
+  const mapSelectedPermissions = (values: string[]) =>
+    values.map((value) => {
+      const found = [...permissions, ...selectedPermissions].find((p) => p.value === value);
+      return found ?? { label: value, value };
+    });
+
+  /** ⬇ Helper: reset selected permissions */
+  const resetPermissions = () => setValue("permissions", []);
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -112,29 +128,25 @@ const RoleForm = ({
           <div className={` ${styles["role-form-item"]}`}>
             <Controller
               control={control}
-              name="permissionsIds"
+              name="permissions"
               render={({ field, fieldState }) => (
                 <CustomMultiSelect
+                  handleResetSelect={resetPermissions}
                   {...field}
                   isRequired={isFieldRequired(schema, field.name)}
                   label="Permissions"
                   placeholder="Select Permissions"
-                  data={
-                    loading
-                      ? [
-                          ...permissions,
-                          { label: "Loading...", value: "__loading" , disabled: true},
-                        ]
-                      : permissions
-                  }
+                  data={getPermissionsData()}
                   searchable
                   searchValue={search}
                   onSearchChange={setSearch}
                   nothingFoundMessage={"No permissions"}
-                  value={field.value}
-                  onChange={(val) => {
-                    field.onChange(val); // only update selected values
-                    setSearch(search);
+                  value={field.value?.map((v) => v.value)}
+                  onChange={(values) => {
+                    // this is because hook form needs the value of multiselect to be label, value pairs
+                    field.onChange(mapSelectedPermissions(values))
+                    setSearch(search)                    
+                    setSelectedPermissions(mapSelectedPermissions(values))
                   }}
                   scrollAreaProps={{
                     onBottomReached: () => {

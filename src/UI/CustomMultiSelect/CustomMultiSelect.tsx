@@ -7,19 +7,39 @@ import {
 } from "@mantine/core";
 import { forwardRef } from "react";
 import CustomFormFieldLabel from "../CustomFormFieldLabel/CustomFormFieldLabel";
-import { IconCheck } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconSquareRoundedX,
+  IconSquareRoundedXFilled,
+} from "@tabler/icons-react";
 interface CustomMultiSelectProps extends MultiSelectProps {
   errorMessage?: string;
   isRequired?: boolean;
+  handleResetSelect?: () => void;
 }
 const CustomMultiSelect = forwardRef<any, CustomMultiSelectProps>(
-  ({ errorMessage, isRequired = true, ...inputProps }, ref) => {
+  (
+    { errorMessage, handleResetSelect, isRequired = true, ...inputProps },
+    ref
+  ) => {
     return (
       <>
-        <CustomFormFieldLabel
-          label={inputProps.label}
-          isRequired={isRequired}
-        />{" "}
+        <div className="flex justify-between items-center">
+          <CustomFormFieldLabel
+            label={inputProps.label}
+            isRequired={isRequired}
+          />
+          <div
+            onMouseDown={(e) => {
+              e.preventDefault(); // prevents input focus/dropdown toggle
+              e.stopPropagation(); // stops event bubbling
+              handleResetSelect?.();
+            }}
+            className="text-roseRed-5 cursor-pointer text-xs"
+          >
+            Reset All
+          </div>
+        </div>
         <MultiSelect
           classNames={{
             option: "data-[checked=true]:bg-gray-1",
