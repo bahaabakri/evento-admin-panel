@@ -29,7 +29,7 @@ const ImagePicker = ({
   label,
   isRequired = true
 }: ImagePickerProps) => {
-  console.log("defaultSelectedImages", defaultSelectedImages);
+  // console.log("defaultSelectedImages", defaultSelectedImages);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);

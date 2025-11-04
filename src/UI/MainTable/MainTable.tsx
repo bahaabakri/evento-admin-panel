@@ -6,10 +6,12 @@ import { transformIsoDateToReadable } from "@/services/date";
 import { IconSquareRoundedX, IconChecks } from "@tabler/icons-react";
 import { StatusObj } from "@/types/status.type";
 import { transformStringToReadable } from "@/services/format";
+import { BASE_URL } from "@/services/api";
 type ColumnType<T, StatusEnum> =
   | { kind: "string" | "boolean" | "date" }
   | { kind: "status"; values: StatusObj<StatusEnum>[] }
-  | { kind: "array"; key: string };
+  | { kind: "array"; key: string }
+  | { kind: "image"; urlKey: string; nameKey: string };
 
 export interface Column<T, StatusEnum = never> {
   header: string;
@@ -22,7 +24,7 @@ interface MainTableProps<T, StatusEnum> {
   columns: Column<T, StatusEnum>[];
   loading: boolean;
   errorMessage: string | null;
-  children: ReactElement;
+  children?: ReactElement;
   renderActions?: (row: T, rowIndex: number) => ReactElement;
 }
 const statusColorMap: Record<string, string> = {
@@ -94,6 +96,36 @@ const MainTable = <T, StatusEnum>({
               );
             }
 
+            if (col.type.kind === "image") {
+              const imageObj = Array.isArray(row[col.accessor])
+                ? row[col.accessor][0]
+                : row[col.accessor];
+
+              const fallbackSrc = "/small-image-placeholder.png";
+              const imageUrl = imageObj?.[col.type.urlKey]
+                ? `${BASE_URL}${imageObj[col.type.urlKey]}`
+                : fallbackSrc;
+
+              const altText =
+                imageObj?.[col.type.nameKey] || "Image not available";
+
+              return (
+                <img
+                  className="w-12 h-12 object-contain rounded-md border border-gray-200 bg-gray-50"
+                  src={imageUrl}
+                  alt={altText}
+                  onError={(e) => {                     
+                    if (
+                      e.currentTarget.src !==
+                      window.location.origin + fallbackSrc
+                    ) {
+                      e.currentTarget.src = fallbackSrc;
+                    }
+                  }}
+                />
+              );
+            }
+
             return null;
           })()}
         </Table.Td>
@@ -106,7 +138,7 @@ const MainTable = <T, StatusEnum>({
     <>
       <div className="flex justify-between align-center">
         {title && <h2 className={classes.title}>{title}</h2>}
-        <div className="flex items-center gap-2">{children}</div>
+        {children && <div className="flex items-center gap-2">{children}</div>}
       </div>
       {loading ? (
         <div className="flex items-center justify-center h-20">

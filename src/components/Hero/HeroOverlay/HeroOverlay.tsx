@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SelectedImage } from "@/UI/ImagePicker/ImagePicker";
 import { useHttp } from "@/hooks/useHttp";
 import { HeroResponse } from "../hero.type";
+import { BASE_URL } from "@/services/api";
 const HeroOverlay: FC = () => {
     
     const [selectedHeroImageIndex, setSelectedHeroImageIndex] =
@@ -48,7 +49,7 @@ const HeroOverlay: FC = () => {
             <motion.div
               key={selectedHeroImageIndex}
               style={{
-                backgroundImage: `url(${import.meta.env.VITE_API_BASE_URL}${activeHeroImages[selectedHeroImageIndex].url})`,
+                backgroundImage: `url(${BASE_URL}${activeHeroImages[selectedHeroImageIndex].url})`,
               }}
               className={styles["image-slider"]}
               animate={{ opacity: 0.5, x: 0 }}

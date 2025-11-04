@@ -3,4 +3,6 @@ export type Permission = {
   name: string;
   description: string;
   slug: string;
+  module:string;
+  action: string
 };

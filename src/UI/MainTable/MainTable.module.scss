@@ -22,3 +22,11 @@
 .scrolled {
   box-shadow: var(--mantine-shadow-sm);
 }
+
+// For loaded image
+img {
+  transition: opacity 0.2s ease-in;
+}
+img:not([src*="placeholder"]) {
+  opacity: 1;
+}

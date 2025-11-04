@@ -21,6 +21,7 @@ import EditAdminPage from "@/pages/Admins/edit/EditAdmin";
 import RolesPage from "@/pages/Roles/Roles";
 import AddRolePage from "@/pages/Roles/add/AddRole";
 import EditRolePage from "@/pages/Roles/edit/EditRole";
+import PermissionsPage from "@/pages/Permissions/Permissions";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
               { path: "add", element: <AddRolePage /> },
               { path: "edit/:roleId", element: <EditRolePage /> },
             ],
+          },
+          {
+            path: "permissions",
+            children: [{ index: true, element: <PermissionsPage /> }],
           },
         ],
       },

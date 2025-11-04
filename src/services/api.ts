@@ -1,18 +1,19 @@
-import axios from 'axios';
-import { getAuthToken } from './auth-cookie';
+import axios from "axios";
+import { getAuthToken } from "./auth-cookie";
 // import { getAuthToken } from './auth-cookie';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   withCredentials: true, // for sending cookies to the server
 });
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use((config) => {
-  const token = getAuthToken() ; // read token from cookie
+  const token = getAuthToken(); // read token from cookie
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -21,9 +22,8 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-
 const request = async <T = unknown>(
-  method: 'get' | 'post' | 'put' | 'delete' | 'patch',
+  method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   data?: unknown,
   config?: { [key: string]: unknown }
@@ -32,9 +32,10 @@ const request = async <T = unknown>(
     method,
     url,
     data,
-    ...config
+    ...config,
   });
 
   return response.data;
 };
-export {axiosInstance, request};
+
+export { axiosInstance, request, BASE_URL };

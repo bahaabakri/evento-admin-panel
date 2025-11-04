@@ -44,9 +44,9 @@ const EditEventPage = () => {
       setDefaultSelectedImages(images);
     }
   };
-  const handleEdit = async (formData: EventFormData, imagesIds: string[]) => {
-    console.log("formData", formData);
-    console.log("imageIds", imagesIds);
+  const handleEdit = async (formData: EventFormData, imagesIds: number[]) => {
+    // console.log("formData", formData);
+    // console.log("imageIds", imagesIds);
     const {error} = await requestEditEvent("patch", `admin/events/${eventId}`, {
       ...formData,
       // date: dayjs(formData.date).toISOString(),

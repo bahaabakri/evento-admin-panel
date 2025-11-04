@@ -16,9 +16,9 @@ const AddEventPage = () => {
   const {loading, request} = useHttp()
   /*** action form hook */
   // console.log(watch("date"))
-  const handleAdd = async (formData: EventFormData, imagesIds: string[]) => {
-    console.log("formData", formData);
-    console.log("imageIds", imagesIds);
+  const handleAdd = async (formData: EventFormData, imagesIds: number[]) => {
+    // console.log("formData", formData);
+    // console.log("imageIds", imagesIds);
     const {data, error} = await request('post', 'admin/events', {
         ...formData,
         // date: dayjs(formData.date).toISOString(),

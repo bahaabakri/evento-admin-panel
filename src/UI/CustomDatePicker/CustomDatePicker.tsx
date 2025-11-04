@@ -1,4 +1,8 @@
-import { DatePickerInput, type DatePickerInputProps } from "@mantine/dates";
+import {
+  DatePickerInput,
+  DateTimePicker,
+  type DatePickerInputProps,
+} from "@mantine/dates";
 import CustomFormFieldLabel from "../CustomFormFieldLabel/CustomFormFieldLabel";
 
 interface CustomDateTimePickerProps extends DatePickerInputProps {
@@ -16,8 +20,13 @@ const CustomDateTimePicker = ({
   return (
     <>
       <CustomFormFieldLabel label={inputProps.label} isRequired={isRequired} />
-      <DatePickerInput
+      <DateTimePicker
         error={errorMessage}
+        timePickerProps={{
+          withDropdown: true,
+          popoverProps: { withinPortal: false },
+          format: "12h",
+        }}
         placeholder="Pick date"
         value={value}
         {...inputProps}

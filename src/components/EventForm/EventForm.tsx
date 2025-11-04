@@ -2,8 +2,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useCallback, useState } from "react";
-import * as yup from "yup";
-import dayjs from "dayjs";
 
 import styles from "./EventForm.module.scss";
 import CustomTextField from "@/UI/CustomTextField/CustomTextField";
@@ -14,41 +12,7 @@ import LocationPicker from "@/UI/LocationPicker/LocationPicker";
 import CustomButton from "@/UI/CustomButton/CustomButton";
 import { requestUploadIntent } from "@/services/upload";
 import type { RequestIntentResponse } from "@/types/upload.type";
-
-// yup validation schema
-const schema = yup.object({
-  name: yup
-    .string()
-    .required("Event name is required")
-    .min(3, "Please Type at least 3 characters")
-    .max(255, "Please Type less than 255 characters"),
-  location: yup
-    .string()
-    .required("Event location is required")
-    .min(3, "Please Type at least 3 characters")
-    .max(255, "Please Type less than 255 characters"),
-  description: yup
-    .string()
-    .required("Event description is required")
-    .min(5, "Please Type at least 5 characters")
-    .max(255, "Please Type less than 255 characters"),
-  date: yup
-    .string()
-    .required("Start date is required")
-    .test("is-valid-date", "Invalid date format", (value) => {
-      return value ? dayjs(value).isValid() : false;
-    }),
-  lat: yup
-    .number()
-    .required("Latitude is required")
-    .min(-90, "Latitude must be ≥ -90")
-    .max(90, "Latitude must be ≤ 90"),
-  lng: yup
-    .number()
-    .required("Longitude is required")
-    .min(-90, "Latitude must be ≥ -90")
-    .max(90, "Latitude must be ≤ 90"),
-});
+import eventFormSchema from "@/form-schemas/event-form-schema";
 
 export type EventFormData = {
   date: string;
@@ -61,7 +25,7 @@ export type EventFormData = {
 
 type Props = {
   mode: "add" | "edit";
-  onSubmit: (data: EventFormData, imageIds: string[]) => void;
+  onSubmit: (data: EventFormData, imageIds: number[]) => void;
   defaultValues: EventFormData;
   isPending?: boolean;
   defaultSelectedImages?: SelectedImage[];
@@ -74,10 +38,10 @@ const EventForm = ({
   isPending,
   defaultSelectedImages,
 }: Props) => {
-  console.log("defaultValues", defaultValues);
+  // console.log("defaultValues", defaultValues);
   const [imageError, setImageError] = useState<string>();
   const [uploadIntent, setUploadIntent] = useState<RequestIntentResponse>();
-  const [imagesIds, setImagesIds] = useState<string[]>([]);
+  const [imagesIds, setImagesIds] = useState<number[]>([]);
   const [lng, setLng] = useState<number>();
   const [lat, setLat] = useState<number>();
   const {
@@ -89,14 +53,19 @@ const EventForm = ({
   } = useForm<EventFormData>({
     defaultValues,
     mode: "onBlur",
-    resolver: yupResolver(schema),
+    resolver: yupResolver(eventFormSchema),
   });
-  console.log("watch", watch("date"));
+  // console.log("watch", watch("date"));
   // useEffect hook to request intent api
   useEffect(() => {
     // setImagesIds(defaultSelectedImages.map((el) => el.id.toString()));
     requestUploadImageIntent();
   }, []);
+  
+  // console.log("watch", watch());
+  useEffect(() => {
+    handleSelectLocation(defaultValues.lat, defaultValues.lng);
+  }, [defaultValues]);
   const requestUploadImageIntent = async () => {
     const intent = await requestUploadIntent();
     setUploadIntent(intent);
@@ -110,7 +79,7 @@ const EventForm = ({
       // once change in image picker please check error message
       checkImagesValidation(files, selectedImages);
       if (!imageError) {
-        setImagesIds(selectedImages.map((el) => el.id.toString()));
+        setImagesIds(selectedImages.map((el) => el.id));
       }
     },
     []
@@ -136,7 +105,16 @@ const EventForm = ({
       setImageError("Please upload at least one image");
       return;
     }
+    // console.log(imagesIds);
+
     onSubmit(formData, imagesIds);
+  };
+
+  const handleSelectLocation = (selectedLat: number, selectedLng: number) => {
+    setValue("lat", selectedLat);
+    setValue("lng", selectedLng);
+    setLat(selectedLat);
+    setLng(selectedLng);
   };
 
   return (
@@ -185,12 +163,9 @@ const EventForm = ({
             <input type="hidden" name="lng" value={lng} />
             <input type="hidden" name="lat" value={lat} />
             <LocationPicker
-              onSelect={(selectedLat, selectedLng) => {
-                setValue("lat", selectedLat);
-                setValue("lng", selectedLng);
-                setLat(selectedLat);
-                setLng(selectedLng);
-              }}
+              onSelect={handleSelectLocation}
+              defaultLat={defaultValues.lat}
+              defaultLng={defaultValues.lng}
             />
           </div>
           <div
@@ -225,7 +200,7 @@ const EventForm = ({
               render={({ field, fieldState }) => (
                 <CustomDateTimePicker
                   {...field}
-                  label="Event Date"
+                  label="Event Date & Time"
                   errorMessage={
                     fieldState.isTouched && fieldState.error
                       ? fieldState.error.message
