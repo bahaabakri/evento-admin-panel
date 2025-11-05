@@ -1,16 +1,17 @@
 import styles from "./EditUser.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
+import EventForm, { EventFormData } from "@/components/Forms/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
 import dayjs from "dayjs";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import UserForm, { UserFormData } from "@/components/UserForm/UserForm";
+import UserForm, { UserFormData } from "@/components/Forms/UserForm/UserForm";
 import { filterDataToSend } from "@/services/util";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { User } from "@/types/user.type";
 import { Loader } from "@mantine/core";
 import userFormSchema from "@/form-schemas/user-form-schema";
+import { MyResponse } from "@/types/response.type.";
 // import * as dayjs from "dayjs";
 
 /**
@@ -52,7 +53,7 @@ const EditUserPage = () => {
   const handleEdit = async (formData: UserFormData) => {
     console.log("formData", formData);
 
-    const { data, error } = await requestEditUser(
+    const { data, error } = await requestEditUser<MyResponse<User, 'user'>>(
       "patch",
       `admin/users/users/${userId}`,
       {
@@ -63,7 +64,7 @@ const EditUserPage = () => {
       // handle error
       handleErrorEditingUser(error);
     } else {
-      handleSuccessEditingUser("Updated User Successfully", "/users");
+      handleSuccessEditingUser(data?.message || "Updated User Successfully", "/users");
     }
   };
   ////////////////// helper methods /////////////////

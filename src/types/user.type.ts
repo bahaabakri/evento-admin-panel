@@ -10,4 +10,5 @@ export interface User {
   phone: string;
   createdAt: Date;
   updatedAt: Date;
+  rejectionReason?:string
 }

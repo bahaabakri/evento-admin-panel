@@ -2,8 +2,10 @@ import styles from "./AddRole.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import { useHttp } from "@/hooks/useHttp";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import RoleForm, { RoleFormData } from "@/components/RoleForm/RoleForm";
+import RoleForm, { RoleFormData } from "@/components/Forms/RoleForm/RoleForm";
 import { roleFormSchema } from "@/form-schemas/role-form-schema";
+import { MyResponse } from "@/types/response.type.";
+import { Role } from "../roles.type";
 // import * as dayjs from "dayjs";
 
 /**
@@ -27,14 +29,14 @@ const AddRolePage = () => {
       ...formData,
       permissionsIds: formData.permissions.map((p) => Number(p.value)),
     };
-    const { data, error } = await request("post", "admin/roles", payload);
+    const { data, error } = await request<MyResponse<Role, 'role'>>("post", "admin/roles", payload);
     if (error) {
       // handle error
       // console.log('error', error);
       
       handleErrorAddingRole(error);
     } else {
-      handleSuccessAddingRole("Created Role Successfully", "/roles");
+      handleSuccessAddingRole(data?.message || "Created Role Successfully", "/roles");
     }
   };
   ////////////////// helper methods /////////////////

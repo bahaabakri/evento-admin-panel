@@ -2,12 +2,12 @@ import HeroOverlay from "@/components/Hero/HeroOverlay/HeroOverlay";
 import useAuth from "@/hooks/useAuth";
 import { useConfirmModal } from "@/hooks/useConfirmModal";
 import { useLockedModal } from "@/hooks/useLockModal";
-import { FC, useEffect } from "react";
+import { FC, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface SuspendAccountLayoutProps {
   title: string;
-  message: string;
+  message: ReactNode;
 }
 const SuspendAccountLayout: FC<SuspendAccountLayoutProps> = ({
   title,

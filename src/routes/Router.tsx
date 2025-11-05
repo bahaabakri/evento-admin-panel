@@ -22,6 +22,7 @@ import RolesPage from "@/pages/Roles/Roles";
 import AddRolePage from "@/pages/Roles/add/AddRole";
 import EditRolePage from "@/pages/Roles/edit/EditRole";
 import PermissionsPage from "@/pages/Permissions/Permissions";
+import UnauthorizedAccountPage from "@/pages/Auth/UnauthorizedAccountPage/UnauthorizedAccountPage";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
       { path: "auth/logout", element: <LogoutPage /> },
       { path: "auth/pending", element: <PendingAccountPage /> },
       { path: "auth/rejected", element: <RejectedAccountPage /> },
+      { path: "auth/unauthorized", element: <UnauthorizedAccountPage /> },
     ],
   },
 ]);

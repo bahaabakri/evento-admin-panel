@@ -2,12 +2,13 @@ import styles from "./EditAdmin.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import { useHttp } from "@/hooks/useHttp";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import UserForm, { UserFormData } from "@/components/UserForm/UserForm";
+import UserForm, { UserFormData } from "@/components/Forms/UserForm/UserForm";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { User } from "@/types/user.type";
 import { Loader } from "@mantine/core";
 import adminFormSchema from "@/form-schemas/admin-form-schema";
+import { MyResponse } from "@/types/response.type.";
 // import * as dayjs from "dayjs";
 
 /**
@@ -49,7 +50,7 @@ const EditAdminPage = () => {
   const handleEdit = async (formData: UserFormData) => {
     console.log("formData", formData);
 
-    const { data, error } = await requestEditAdmin(
+    const { data, error } = await requestEditAdmin<MyResponse<User, 'user'>>(
       "patch",
       `admin/users/admins/${adminId}`,
       {
@@ -60,7 +61,7 @@ const EditAdminPage = () => {
       // handle error
       handleErrorEditingAdmin(error);
     } else {
-      handleSuccessEditingAdmin("Updated Admin Successfully", "/admins");
+      handleSuccessEditingAdmin(data?.message || "Updated Admin Successfully", "/admins");
     }
   };
 

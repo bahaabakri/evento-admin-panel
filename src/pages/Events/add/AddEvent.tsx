@@ -1,9 +1,11 @@
 import styles from "./AddEvent.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
-import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
+import EventForm, { EventFormData } from "@/components/Forms/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
 import dayjs from "dayjs";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
+import { MyEvent } from "../events.type";
+import { MyResponse } from "@/types/response.type.";
 // import * as dayjs from "dayjs";
 
 /**
@@ -19,7 +21,7 @@ const AddEventPage = () => {
   const handleAdd = async (formData: EventFormData, imagesIds: number[]) => {
     // console.log("formData", formData);
     // console.log("imageIds", imagesIds);
-    const {data, error} = await request('post', 'admin/events', {
+    const {data, error} = await request<MyResponse<MyEvent, 'event'>>('post', 'admin/events', {
         ...formData,
         // date: dayjs(formData.date).toISOString(),
         imagesIds
@@ -28,7 +30,7 @@ const AddEventPage = () => {
       handleErrorAddingEvent(error);
     }
     else {
-      handleSuccessAddingEvent('Created Event Successfully', '/events');
+      handleSuccessAddingEvent(data?.message || 'Created Event Successfully', '/events');
     }
   };
   ////////////////// helper methods /////////////////

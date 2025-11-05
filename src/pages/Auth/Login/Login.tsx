@@ -6,8 +6,10 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./Login.module.scss";
 import * as yup from "yup";
-import AuthLayout from "../AuthLayout/AuthLayout";
+import AuthLayout from "../../../Layout/AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
+import { MyResponse } from "@/types/response.type.";
+import { User } from "@/types/user.type";
 const schema = yup.object({
   email: yup
     .string()
@@ -32,12 +34,12 @@ const Login: React.FC = () => {
     },
   });
   const login = async (formData: { email: string }) => {
-    const { data, error } = await request("post", "admin/auth/login", formData);
+    const { data, error } = await request<MyResponse<User, 'user'>>("post", "admin/auth/login", formData);
     if (error) {
       handleErrorLogin(error);
     } else {
       handleSuccessLogin(
-        "Otp has been sent successfully",
+        data?.message || "Otp has been sent successfully",
         `/auth/otp?email=${formData.email}`
       );
     }

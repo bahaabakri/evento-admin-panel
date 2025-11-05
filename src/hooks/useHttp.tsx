@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 import { request as requestExt } from "@/services/api";
+import { useNavigate } from "react-router-dom";
 
 type RequestConfig = {
   headers?: Record<string, string>;
@@ -13,7 +14,7 @@ type RequestResult<T> = {
 export function useHttp() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+  const navigate = useNavigate()
   const request = useCallback(
     async <T = unknown,>(
       method: "get" | "post" | "put" | "delete" | "patch",
@@ -30,6 +31,9 @@ export function useHttp() {
         let message = "Request failed";
         if (axios.isAxiosError(err)) {
           message = err.response?.data?.message || err.message || message;
+          if(err.status === 401) {
+            navigate("/auth/unauthorized", { replace: true });
+          }
         } else if (err instanceof Error) {
           message = err.message;
         }

@@ -2,13 +2,14 @@ import styles from "./EditEvent.module.scss";
 import { useEffect, useState } from "react";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import { useParams } from "react-router-dom";
-import EventForm, { EventFormData } from "@/components/EventForm/EventForm";
+import EventForm, { EventFormData } from "@/components/Forms/EventForm/EventForm";
 import { useHttp } from "@/hooks/useHttp";
 // import dayjs from "dayjs";
 import { Loader } from "@mantine/core";
 import { SelectedImage } from "@/UI/ImagePicker/ImagePicker";
 import { MyEvent } from "../events.type";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
+import { MyResponse } from "@/types/response.type.";
 // import * as dayjs from "dayjs";
 
 /**
@@ -47,7 +48,7 @@ const EditEventPage = () => {
   const handleEdit = async (formData: EventFormData, imagesIds: number[]) => {
     // console.log("formData", formData);
     // console.log("imageIds", imagesIds);
-    const {error} = await requestEditEvent("patch", `admin/events/${eventId}`, {
+    const {data, error} = await requestEditEvent<MyResponse<MyEvent, 'event'>>("patch", `admin/events/${eventId}`, {
       ...formData,
       // date: dayjs(formData.date).toISOString(),
       imagesIds,
@@ -56,7 +57,7 @@ const EditEventPage = () => {
       // handle error
       handleErrorUpdatingEvent(error);
     } else {
-      handleSuccessUpdatingEvent("Updated Event Successfully", '/events');
+      handleSuccessUpdatingEvent(data?.message || "Updated Event Successfully", '/events');
     }
   };
   return (

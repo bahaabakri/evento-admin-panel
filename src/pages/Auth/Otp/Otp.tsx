@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./Otp.module.scss";
 import * as yup from "yup";
-import AuthLayout from "../AuthLayout/AuthLayout";
+import AuthLayout from "../../../Layout/AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { VerifyOtpResponse } from "../auth.type";
 import { useDispatch } from "react-redux";

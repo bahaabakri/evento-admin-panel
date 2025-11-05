@@ -2,8 +2,10 @@ import styles from "./AddAdmin.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import { useHttp } from "@/hooks/useHttp";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import UserForm, { UserFormData } from "@/components/UserForm/UserForm";
+import UserForm, { UserFormData } from "@/components/Forms/UserForm/UserForm";
 import adminFormSchema from "@/form-schemas/admin-form-schema";
+import { MyResponse } from "@/types/response.type.";
+import { User } from "@/types/user.type";
 // import * as dayjs from "dayjs";
 
 /**
@@ -24,14 +26,14 @@ const AddAdminPage = () => {
   const handleAdd = async (formData: UserFormData) => {
     console.log("formData", formData);
 
-    const { data, error } = await request("post", "admin/users/admins", {
+    const { data, error } = await request<MyResponse<User, 'user'>>("post", "admin/users/admins", {
       ...formData,
     });
     if (error) {
       // handle error
       handleErrorAddingAdmin(error);
     } else {
-      handleSuccessAddingAdmin("Created Admin Successfully", "/admins");
+      handleSuccessAddingAdmin(data?.message || "Created Admin Successfully", "/admins");
     }
   };
   ////////////////// helper methods /////////////////

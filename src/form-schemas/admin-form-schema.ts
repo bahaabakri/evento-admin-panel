@@ -1,6 +1,6 @@
 import parsePhoneNumberFromString from "libphonenumber-js";
 import * as yup from "yup";
-import { UserFormData } from "../components/UserForm/UserForm";
+import { UserFormData } from "../components/Forms/UserForm/UserForm";
 
 const adminFormSchema: yup.ObjectSchema<Required<UserFormData>> = yup.object({
   firstname: yup

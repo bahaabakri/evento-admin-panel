@@ -2,12 +2,13 @@ import styles from "./EditRole.module.scss";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import { useHttp } from "@/hooks/useHttp";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
-import RoleForm, { RoleFormData } from "@/components/RoleForm/RoleForm";
+import RoleForm, { RoleFormData } from "@/components/Forms/RoleForm/RoleForm";
 import { roleFormSchema } from "@/form-schemas/role-form-schema";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Role } from "../roles.type";
 import { Loader } from "@mantine/core";
+import { MyResponse } from "@/types/response.type.";
 // import * as dayjs from "dayjs";
 
 /**
@@ -58,7 +59,7 @@ const EditRolePage = () => {
       ...formData,
       permissionsIds: formData.permissions.map((p) => Number(p.value)),
     };
-    const { data, error } = await requestEditRole(
+    const { data, error } = await requestEditRole<MyResponse<Role, 'role'>>(
       "patch",
       `admin/roles/${roleId}`,
       payload
@@ -67,7 +68,7 @@ const EditRolePage = () => {
       // handle error
       handleErrorEditingRole(error);
     } else {
-      handleSuccessEditingRole("Updated Role Successfully", "/roles");
+      handleSuccessEditingRole(data?.message || "Updated Role Successfully", "/roles");
     }
   };
   ////////////////// helper methods /////////////////

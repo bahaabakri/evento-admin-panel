@@ -1,4 +1,4 @@
-import { EventFormData } from "@/components/EventForm/EventForm";
+import { EventFormData } from "@/components/Forms/EventForm/EventForm";
 import * as yup from "yup";
 import dayjs from "dayjs";
 

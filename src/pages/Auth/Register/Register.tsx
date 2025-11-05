@@ -6,12 +6,14 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./Register.module.scss";
 import * as yup from "yup";
-import AuthLayout from "../AuthLayout/AuthLayout";
+import AuthLayout from "../../../Layout/AuthLayout/AuthLayout";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { RegisterPayload } from "../auth.type";
 import CustomPhoneField from "@/UI/CustomPhoneField/CustomPhoneField";
 import adminFormSchema from "@/form-schemas/admin-form-schema";
+import { MyResponse } from "@/types/response.type.";
+import { User } from "@/types/user.type";
 const Login: React.FC = () => {
   const { loading: isPending, request } = useHttp();
   const { handleError: handleErrorReg, handleSuccess: handleSuccessReg } =
@@ -31,7 +33,7 @@ const Login: React.FC = () => {
     },
   });
   const register = async (formData: RegisterPayload) => {
-    const { data, error } = await request(
+    const { data, error } = await request<MyResponse<User, 'user'>>(
       "post",
       "admin/auth/register",
       formData
@@ -40,7 +42,7 @@ const Login: React.FC = () => {
       handleErrorReg(error);
     } else {
       handleSuccessReg(
-        "Otp has been sent successfully",
+        data?.message || "Otp has been sent successfully",
         `/auth/otp?email=${formData.email}`
       );
     }

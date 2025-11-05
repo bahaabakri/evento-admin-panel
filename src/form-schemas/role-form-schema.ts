@@ -1,4 +1,4 @@
-import { RoleFormData } from "@/components/RoleForm/RoleForm";
+import { RoleFormData } from "@/components/Forms/RoleForm/RoleForm";
 import * as yup from "yup";
 
 export const roleFormSchema = yup.object({
