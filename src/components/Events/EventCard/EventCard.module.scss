@@ -1,0 +1,35 @@
+.event-card {
+    // width: 300px;
+    @apply flex flex-col justify-between gap-2 rounded-xl pb-2;
+    background-color: #fff;
+    border: 1px solid var(--primary-color);
+    .event-card-content-img {
+        color: var(--black);
+        @apply flex flex-col gap-2;
+        .event-card-img {
+            // width: 300px;
+            height: 200px;
+            img {
+                @apply rounded-xl w-full h-full object-cover;
+            }
+        }
+
+        .event-card-content {
+            @apply flex flex-col gap-2 p-2 ;
+            .event-card-title {
+                @apply font-bold text-lg text-center;
+            }
+            .event-card-date, .event-card-place {
+                @apply flex gap-2 items-center;
+            }
+            .event-card-desc {
+                @apply text-sm;
+                display: -webkit-box;
+                -webkit-line-clamp: 1; /* Show only 3 lines */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+
+    }
+}

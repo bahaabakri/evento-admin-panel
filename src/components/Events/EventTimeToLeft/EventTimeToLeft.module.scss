@@ -1,0 +1,13 @@
+.event-card-date {
+    @apply text-center;
+    color: var(--primary-color);
+    .event-card-date-title {
+        @apply font-bold;
+    }
+    .event-card-date-value {
+        @apply text-2xl font-bold;
+    }
+    .event-card-date-unit {
+        @apply text-xs;
+    }
+}

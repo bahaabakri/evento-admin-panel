@@ -5,6 +5,7 @@ import { Pagination, ThemeIcon } from "@mantine/core";
 import {
   IconCheck,
   IconEdit,
+  IconEye,
   IconPlus,
   IconSquare,
   IconSquareX,
@@ -53,15 +54,18 @@ const AdminsPage = () => {
       setAdmins(data);
     }
   };
-  const navigateToAddAdmin = () => {
-    navigate("/admins/add");
-  };
   useEffect(() => {
     fetchAllAdmins();
   }, []);
 
+  const navigateToAddAdmin = () => {
+    navigate("/admins/add");
+  };
   const navigateToEditAdmin = (row: User) => {
     navigate(`/admins/edit/${row.id}`);
+  };
+  const onClickViewButton = (row: User) => {
+    navigate(`/admins/details/${row.id}`);
   };
   const onClickDeleteButton = async (row: User) => {
     // Implement delete functionality here
@@ -140,6 +144,15 @@ const AdminsPage = () => {
         columns={adminsColumns}
         renderActions={(row) => (
           <div className="flex gap-2">
+            <ThemeIcon
+              variant="light"
+              color="teal"
+              className="cursor-pointer"
+              size={30}
+              onClick={() => onClickViewButton(row)}
+            >
+              <IconEye color="teal" size={18} />
+            </ThemeIcon>
             <ThemeIcon
               variant="light"
               color="blue"

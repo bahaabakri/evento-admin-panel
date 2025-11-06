@@ -23,6 +23,7 @@ import AddRolePage from "@/pages/Roles/add/AddRole";
 import EditRolePage from "@/pages/Roles/edit/EditRole";
 import PermissionsPage from "@/pages/Permissions/Permissions";
 import UnauthorizedAccountPage from "@/pages/Auth/UnauthorizedAccountPage/UnauthorizedAccountPage";
+import AdminDetailsPage from "@/pages/Admins/details/AdminDetails";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
               { index: true, element: <AdminsPage /> },
               { path: "add", element: <AddAdminPage /> },
               { path: "edit/:adminId", element: <EditAdminPage /> },
+              { path: "details/:adminId", element: <AdminDetailsPage /> },
             ],
           },
           {

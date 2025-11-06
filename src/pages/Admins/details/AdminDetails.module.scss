@@ -1,0 +1,10 @@
+.admin-details-wrapper {
+    @apply container mx-auto;
+    .admin-details {
+        .admin-details-title {
+            @apply text-xl font-bold;
+            color: var(--primary-color);
+        }
+        @apply flex flex-col gap-5;
+    }
+}
