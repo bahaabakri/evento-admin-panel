@@ -24,7 +24,7 @@ const CustomModal = ({
       centered
       size={size}
       radius="md"
-      overlayProps={{ backgroundOpacity: 0.3, blur: 3 }}
+      overlayProps={{ backgroundOpacity: 0.6, blur: 3 }}
     >
       {children}
     </Modal>

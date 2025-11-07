@@ -7,6 +7,7 @@ import {
   IconEdit,
   IconEye,
   IconPlus,
+  IconSettingsPlus,
   IconSquare,
   IconSquareX,
   IconTrash,
@@ -20,6 +21,7 @@ import { MyResponse, MyResponsePagination } from "@/types/response.type.";
 import adminsColumns from "./admins-columns";
 import { UserStatus } from "@/enums/user-status.enum";
 import RejectAdminModal from "@/components/Modals/RejectAdminModal/RejectAdminModal";
+import AssignRolesToAdminModal from "@/components/Modals/AssignRolesToAdminModal/AssignRolesToAdminModal";
 // import { useDisclosure } from "@mantine/hooks"
 
 const AdminsPage = () => {
@@ -30,6 +32,9 @@ const AdminsPage = () => {
   const navigate = useNavigate();
   const { openConfirmModal } = useConfirmModal();
   const [rejectingAdmin, setRejectingAdmin] = useState<User | null>(null);
+  const [assigningRolesAdmin, setAssigningRolesAdmin] = useState<User | null>(
+    null
+  );
   const {
     loading: loadingAdminsData,
     errorMessage: errorMessageAdminsData,
@@ -93,6 +98,9 @@ const AdminsPage = () => {
   const onClickRejectButton = async (row: User) => {
     setRejectingAdmin(row);
   };
+  const onClickAssignRolesButton = async (row: User) => {
+    setAssigningRolesAdmin(row);
+  };
   const handleDelete = async (row: User) => {
     const { data, error } = await requestDeleteAdmin<MyResponse<User, "user">>(
       "delete",
@@ -132,94 +140,113 @@ const AdminsPage = () => {
     }
   };
   return (
-    <div>
-      {/* <Modal opened={opened} onClose={close} title="Confirmation"> */}
-      {/* Modal content */}
-      {/* </Modal> */}
-      <MainTable
-        title={"All Admins"}
-        loading={loadingAdminsData}
-        data={admins}
-        errorMessage={errorMessageAdminsData}
-        columns={adminsColumns}
-        renderActions={(row) => (
-          <div className="flex gap-2">
-            <ThemeIcon
-              variant="light"
-              color="teal"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => onClickViewButton(row)}
-            >
-              <IconEye color="teal" size={18} />
-            </ThemeIcon>
-            <ThemeIcon
-              variant="light"
-              color="blue"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => navigateToEditAdmin(row)}
-            >
-              <IconEdit color="blue" size={18} />
-            </ThemeIcon>
-            <ThemeIcon
-              variant="light"
-              color="red"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => onClickDeleteButton(row)}
-            >
-              <IconTrash color="red" size={18} />
-            </ThemeIcon>
-            {row.status === UserStatus.PENDING && (
-              <>
-                <ThemeIcon
-                  title="approve admin"
-                  variant="light"
-                  color="green"
-                  className="cursor-pointer"
-                  size={30}
-                  onClick={() => onClickApproveButton(row)}
-                >
-                  <IconCheck color="green" size={18} />
-                </ThemeIcon>
-                <ThemeIcon
-                  title="reject admin"
-                  variant="light"
-                  color="red"
-                  className="cursor-pointer"
-                  size={30}
-                  onClick={() => onClickRejectButton(row)}
-                >
-                  <IconSquareX color="red" size={18} />
-                </ThemeIcon>
-                <RejectAdminModal
-                  opened={!!rejectingAdmin}
-                  onClose={() => setRejectingAdmin(null)}
-                  onSubmit={(reason) => handleReject(rejectingAdmin!, reason)}
-                  loading={loadingRejectAdmin}
-                />
-              </>
-            )}
-          </div>
-        )}
-      >
-        <CustomButton
-          onClick={navigateToAddAdmin}
-          leftSection={<IconPlus size={14} />}
+    <>
+      <div>
+        {/* <Modal opened={opened} onClose={close} title="Confirmation"> */}
+        {/* Modal content */}
+        {/* </Modal> */}
+        <MainTable
+          title={"All Admins"}
+          loading={loadingAdminsData}
+          data={admins}
+          errorMessage={errorMessageAdminsData}
+          columns={adminsColumns}
+          renderActions={(row) => (
+            <div className="flex gap-2">
+              <ThemeIcon
+                variant="light"
+                color="teal"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => onClickViewButton(row)}
+              >
+                <IconEye color="teal" size={18} />
+              </ThemeIcon>
+              <ThemeIcon
+                variant="light"
+                color="blue"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => navigateToEditAdmin(row)}
+              >
+                <IconEdit color="blue" size={18} />
+              </ThemeIcon>
+              <ThemeIcon
+                variant="light"
+                color="red"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => onClickDeleteButton(row)}
+              >
+                <IconTrash color="red" size={18} />
+              </ThemeIcon>
+              <ThemeIcon
+                title="assign roles"
+                variant="light"
+                color="violet"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => onClickAssignRolesButton(row)}
+              >
+                <IconSettingsPlus color="violet" size={18} />
+              </ThemeIcon>
+              {row.status === UserStatus.PENDING && (
+                <>
+                  <ThemeIcon
+                    title="approve admin"
+                    variant="light"
+                    color="green"
+                    className="cursor-pointer"
+                    size={30}
+                    onClick={() => onClickApproveButton(row)}
+                  >
+                    <IconCheck color="green" size={18} />
+                  </ThemeIcon>
+                  <ThemeIcon
+                    title="reject admin"
+                    variant="light"
+                    color="red"
+                    className="cursor-pointer"
+                    size={30}
+                    onClick={() => onClickRejectButton(row)}
+                  >
+                    <IconSquareX color="red" size={18} />
+                  </ThemeIcon>
+                </>
+              )}
+            </div>
+          )}
         >
-          <div>Add New Admin</div>
-        </CustomButton>
-      </MainTable>
-      {!loadingAdminsData && admins && admins.length > 0 && (
-        <Pagination
-          className="m-auto w-fit"
-          value={activePage}
-          onChange={(page) => fetchAllAdmins(page)}
-          total={numOfPages}
-        />
-      )}
-    </div>
+          <CustomButton
+            onClick={navigateToAddAdmin}
+            leftSection={<IconPlus size={14} />}
+          >
+            <div>Add New Admin</div>
+          </CustomButton>
+        </MainTable>
+        {!loadingAdminsData && admins && admins.length > 0 && (
+          <Pagination
+            className="m-auto w-fit"
+            value={activePage}
+            onChange={(page) => fetchAllAdmins(page)}
+            total={numOfPages}
+          />
+        )}
+      </div>
+      <RejectAdminModal
+        key={rejectingAdmin?.id}
+        opened={!!rejectingAdmin}
+        onClose={() => setRejectingAdmin(null)}
+        onSubmit={(reason) => handleReject(rejectingAdmin!, reason)}
+        loading={loadingRejectAdmin}
+      />
+      <AssignRolesToAdminModal
+        key={assigningRolesAdmin?.id}
+        opened={!!assigningRolesAdmin}
+        adminId={assigningRolesAdmin?.id}
+        onClose={() => setAssigningRolesAdmin(null)}
+      />
+    </>
   );
 };
 

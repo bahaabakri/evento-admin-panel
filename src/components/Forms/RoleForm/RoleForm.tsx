@@ -9,8 +9,9 @@ import CustomButton from "@/UI/CustomButton/CustomButton";
 import { isFieldRequired, makeSelectUniqueByValue } from "@/services/form";
 import CustomTextarea from "@/UI/CustomTextArea/CustomTextArea";
 import CustomMultiSelect from "@/UI/CustomMultiSelect/CustomMultiSelect";
-import { usePermissions } from "@/hooks/userPermissions";
 import { useEffect, useState } from "react";
+import { usePaginatedFetch } from "@/hooks/usePaginatedFetch";
+import { Permission } from "@/pages/Permissions/permissions.type";
 
 export type RoleFormData = {
   name: string;
@@ -45,8 +46,19 @@ const RoleForm = ({
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
-  const { permissions, search, setSearch, loadMore, loading } =
-    usePermissions();
+  const {
+    data: permissions,
+    loading,
+    search,
+    setSearch,
+    loadMore,
+  } = usePaginatedFetch<Permission>({
+    endpoint: "/admin/permissions",
+    mapData: (data) =>
+      makeSelectUniqueByValue(data.map((p) => ({ label: p.name, value: p.id.toString() }))),
+    perPage: 20,
+    mode: "append", // 👈 infinite scroll mode
+  });
   const submitHandler = (formData: RoleFormData) => {
     onSubmit(formData);
   };

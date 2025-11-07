@@ -1,44 +1,26 @@
-import { useEffect, useState } from "react";
 import MainTable from "@/UI/MainTable/MainTable";
-import { useHttp } from "@/hooks/useHttp";
 import { Pagination, ThemeIcon } from "@mantine/core";
-import { IconEdit, IconEye, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
-import CustomButton from "@/UI/CustomButton/CustomButton";
-import { useConfirmModal } from "@/hooks/useConfirmModal";
-import { showErrorToast, showSuccessToast } from "@/services/toast";
-import { User } from "@/types/user.type";
-import { MyResponsePagination } from "@/types/response.type.";
+import { IconEye } from "@tabler/icons-react";
 import { Permission } from "./permissions.type";
 import permissionsColumns from "./permissions-columns";
+import { usePaginatedFetch } from "@/hooks/usePaginatedFetch";
 // import { useDisclosure } from "@mantine/hooks"
 
 const PermissionsPage = () => {
-  // const [opened, { open, close }] = useDisclosure(false);
-  const [activePage, setPage] = useState(1);
-  const [numOfPages, setNumOfPages] = useState(1);
-  const { loading, errorMessage, request } = useHttp();
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const {
+    data: permissions,
+    loading,
+    page,
+    setPage,
+    total,
+    errorMessage,
+  } = usePaginatedFetch<Permission>({
+    endpoint: "/admin/permissions",
+    perPage: 10,
+    mode: "replace", // 👈 no accumulation
+  });
+  const numOfPages = Math.ceil(total / 10);
 
-  const fetchAllPermissions = async (
-    page: number = 1,
-    perPage: number = 10
-  ) => {
-    setPage(page);
-    const { data: dataRes } = await request<MyResponsePagination<Permission>>(
-      "get",
-      `admin/permissions?page=${page}&perPage=${perPage}`
-    );
-    if (dataRes) {
-      const { data, meta } = dataRes;
-      const { perPage, total } = meta;
-      setNumOfPages(Math.ceil(total / perPage));
-      setPermissions(data);
-    }
-  };
-  useEffect(() => {
-    fetchAllPermissions();
-  }, []);
   const navigateToViewPermission = (row: Permission) => {};
 
   return (
@@ -72,8 +54,8 @@ const PermissionsPage = () => {
       {!loading && permissions && permissions.length > 0 && (
         <Pagination
           className="m-auto w-fit"
-          value={activePage}
-          onChange={(page) => fetchAllPermissions(page)}
+          value={page}
+          onChange={(page) => setPage(page)}
           total={numOfPages}
         />
       )}
