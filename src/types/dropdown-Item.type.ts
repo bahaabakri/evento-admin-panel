@@ -9,7 +9,9 @@ export interface DropDownItem {
     >;
     label: string;
     link: string;
+    permissions?: string[];
   }[];
   link?: string;
   notifications?: number;
+  permissions?: string[];
 }

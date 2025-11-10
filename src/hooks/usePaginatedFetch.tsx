@@ -4,23 +4,26 @@ import { MyResponsePagination } from "@/types/response.type.";
 
 interface UsePaginatedFetchOptions<T> {
   endpoint: string;
-  mapData?: (data: T[]) => any[];
+  mapDataToLabelValuePair?: (data: T[]) => { label: string; value: string }[];
   perPage?: number;
   minSearchLength?: number;
   mode?: "append" | "replace"; // 👈 NEW
-  errorMessage?:string
+  errorMessage?: string;
 }
 
 export function usePaginatedFetch<T>({
   endpoint,
-  mapData = (data) => data,
+  mapDataToLabelValuePair = (data) => [{ label: "", value: "" }],
   perPage = 20,
   minSearchLength = 3,
   mode = "append", // 👈 default for infinite scroll
 }: UsePaginatedFetchOptions<T>) {
   const { request, loading, errorMessage } = useHttp();
 
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<T[]>([]);
+  const [labelValuePairData, setLabelValuePairData] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
@@ -46,11 +49,16 @@ export function usePaginatedFetch<T>({
       if (!response) return;
 
       const { data: items, meta } = response;
-      const mapped = mapData(items);
+      const mapped = mapDataToLabelValuePair(items);
       setTotal(meta.total);
 
       // 👇 Replace or append based on mode
       setData((prev) => {
+        if (reset || mode === "replace") return items;
+        return [...prev, ...data];
+      });
+
+      setLabelValuePairData((prev) => {
         if (reset || mode === "replace") return mapped;
         return [...prev, ...mapped];
       });
@@ -73,6 +81,7 @@ export function usePaginatedFetch<T>({
 
   return {
     data,
+    labelValuePairData,
     total,
     loading,
     search,
@@ -81,6 +90,6 @@ export function usePaginatedFetch<T>({
     setPage,
     loadMore,
     reset,
-    errorMessage
+    errorMessage,
   };
 }

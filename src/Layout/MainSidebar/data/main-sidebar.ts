@@ -1,3 +1,4 @@
+import { PermissionsEnum } from "@/pages/Permissions/permissions.enum";
 import type { DropDownItem } from "@/types/dropdown-Item.type";
 import {
   IconBulb,
@@ -17,6 +18,7 @@ const mainSidebarMenu: DropDownItem[] = [
     icon: IconUser,
     label: "Users Management",
     link: "/users",
+    permissions: [PermissionsEnum.VIEW_USERS],
   },
   {
     icon: IconUserCog,
@@ -25,17 +27,20 @@ const mainSidebarMenu: DropDownItem[] = [
       {
         label: "All Admins",
         link: "/admins",
-        icon: IconList
+        icon: IconList,
+        permissions: [PermissionsEnum.VIEW_ADMINS],
       },
       {
         label: "Roles",
         link: "/roles",
-        icon: IconSettingsCog
+        icon: IconSettingsCog,
+        permissions: [PermissionsEnum.VIEW_ROLES],
       },
       {
         label: "Permissions",
         link: "/permissions",
-        icon: IconKey
+        icon: IconKey,
+        permissions: [PermissionsEnum.VIEW_PERMISSIONS],
       },
     ],
   },
@@ -57,6 +62,7 @@ const mainSidebarMenu: DropDownItem[] = [
   {
     icon: IconCalendarEvent,
     label: "Events",
+    permissions: [PermissionsEnum.VIEW_EVENTS],
     links: [
       {
         icon: IconClearAll,

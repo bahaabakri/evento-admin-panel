@@ -4,6 +4,8 @@ import { IconEye } from "@tabler/icons-react";
 import { Permission } from "./permissions.type";
 import permissionsColumns from "./permissions-columns";
 import { usePaginatedFetch } from "@/hooks/usePaginatedFetch";
+import useIsAllowed from "@/hooks/useIsAllowed";
+import { PermissionsEnum } from "./permissions.enum";
 // import { useDisclosure } from "@mantine/hooks"
 
 const PermissionsPage = () => {
@@ -20,7 +22,9 @@ const PermissionsPage = () => {
     mode: "replace", // 👈 no accumulation
   });
   const numOfPages = Math.ceil(total / 10);
-
+  const { checkIsAllowed } = useIsAllowed();
+  console.log('permissions', permissions);
+  
   const navigateToViewPermission = (row: Permission) => {};
 
   return (
@@ -36,15 +40,18 @@ const PermissionsPage = () => {
         columns={permissionsColumns}
         renderActions={(row) => (
           <div className="flex gap-2">
-            <ThemeIcon
-              variant="light"
-              color="blue"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => navigateToViewPermission(row)}
-            >
-              <IconEye color="blue" size={18} />
-            </ThemeIcon>
+            {checkIsAllowed([PermissionsEnum.VIEW_PERMISSIONS]) && (
+              <ThemeIcon
+                variant="light"
+                color="blue"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => navigateToViewPermission(row)}
+              >
+                <IconEye color="blue" size={18} />
+              </ThemeIcon>
+            )}
+
             {/* <ThemeIcon variant="light" color="red" className="cursor-pointer" size={30} onClick={() => onClickDeleteButton(row)}>
                     <IconTrash color="red" size={18} />
                 </ThemeIcon> */}

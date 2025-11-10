@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import MainTable from "@/UI/MainTable/MainTable";
 import { useHttp } from "@/hooks/useHttp";
 import { Pagination, ThemeIcon } from "@mantine/core";
-import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  IconEdit,
+  IconPlus,
+  IconSettingsPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "@/UI/CustomButton/CustomButton";
 import { useConfirmModal } from "@/hooks/useConfirmModal";
@@ -11,6 +16,9 @@ import { User } from "@/types/user.type";
 import { MyResponse, MyResponsePagination } from "@/types/response.type.";
 import { Role } from "./roles.type";
 import rolesColumns from "./roles-columns";
+import AssignPermissionsToRoleModal from "@/components/Modals/AssignPermissionsToRoleModal/AssignPermissionsToRoleModal";
+import useIsAllowed from "@/hooks/useIsAllowed";
+import { PermissionsEnum } from "../Permissions/permissions.enum";
 // import { useDisclosure } from "@mantine/hooks"
 
 const RolesPage = () => {
@@ -21,7 +29,9 @@ const RolesPage = () => {
   const [roles, setRoles] = useState<Role[]>([]);
   const navigate = useNavigate();
   const { openConfirmModal } = useConfirmModal();
+  const { checkIsAllowed } = useIsAllowed();
 
+  const [assigningPersRole, setAssigningPersRole] = useState<Role | null>(null);
   const fetchAllRoles = async (page: number = 1, perPage: number = 10) => {
     setPage(page);
     const { data: dataRes } = await request<MyResponsePagination<Role>>(
@@ -70,56 +80,86 @@ const RolesPage = () => {
       fetchAllRoles(activePage);
     }
   };
+
+  const onClickAssignPermissionsButton = async (row: Role) => {
+    setAssigningPersRole(row);
+  };
   return (
-    <div>
-      {/* <Modal opened={opened} onClose={close} title="Confirmation"> */}
-      {/* Modal content */}
-      {/* </Modal> */}
-      <MainTable
-        title={"All Roles"}
-        loading={loading}
-        data={roles}
-        errorMessage={errorMessage}
-        columns={rolesColumns}
-        renderActions={(row) => (
-          <div className="flex gap-2">
-            <ThemeIcon
-              variant="light"
-              color="blue"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => navigateToEditRole(row)}
-            >
-              <IconEdit color="blue" size={18} />
-            </ThemeIcon>
-            <ThemeIcon
-              variant="light"
-              color="red"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => onClickDeleteButton(row)}
-            >
-              <IconTrash color="red" size={18} />
-            </ThemeIcon>
-          </div>
-        )}
-      >
-        <CustomButton
-          onClick={navigateToAddRole}
-          leftSection={<IconPlus size={14} />}
+    <>
+      <div>
+        {/* <Modal opened={opened} onClose={close} title="Confirmation"> */}
+        {/* Modal content */}
+        {/* </Modal> */}
+        <MainTable
+          title={"All Roles"}
+          loading={loading}
+          data={roles}
+          errorMessage={errorMessage}
+          columns={rolesColumns}
+          renderActions={(row) => (
+            <div className="flex gap-2">
+              {checkIsAllowed([PermissionsEnum.UPDATE_ROLES]) && (
+                <ThemeIcon
+                  variant="light"
+                  color="blue"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => navigateToEditRole(row)}
+                >
+                  <IconEdit color="blue" size={18} />
+                </ThemeIcon>
+              )}
+              {checkIsAllowed([PermissionsEnum.DELETE_ROLES]) && (
+                <ThemeIcon
+                  variant="light"
+                  color="red"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => onClickDeleteButton(row)}
+                >
+                  <IconTrash color="red" size={18} />
+                </ThemeIcon>
+              )}
+              {checkIsAllowed([PermissionsEnum.ASSIGN_PERMISSIONS_TO_ROLE]) && (
+                <ThemeIcon
+                  title="assign roles"
+                  variant="light"
+                  color="violet"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => onClickAssignPermissionsButton(row)}
+                >
+                  <IconSettingsPlus color="violet" size={18} />
+                </ThemeIcon>
+              )}
+            </div>
+          )}
         >
-          <div>Add New Role</div>
-        </CustomButton>
-      </MainTable>
-      {!loading && roles && roles.length > 0 && (
-        <Pagination
-          className="m-auto w-fit"
-          value={activePage}
-          onChange={(page) => fetchAllRoles(page)}
-          total={numOfPages}
-        />
-      )}
-    </div>
+          {checkIsAllowed([PermissionsEnum.CREATE_ROLES]) && (
+            <CustomButton
+              onClick={navigateToAddRole}
+              leftSection={<IconPlus size={14} />}
+            >
+              <div>Add New Role</div>
+            </CustomButton>
+          )}
+        </MainTable>
+        {!loading && roles && roles.length > 0 && (
+          <Pagination
+            className="m-auto w-fit"
+            value={activePage}
+            onChange={(page) => fetchAllRoles(page)}
+            total={numOfPages}
+          />
+        )}
+      </div>
+      <AssignPermissionsToRoleModal
+        key={assigningPersRole?.id}
+        opened={!!assigningPersRole}
+        roleId={assigningPersRole?.id}
+        onClose={() => setAssigningPersRole(null)}
+      />
+    </>
   );
 };
 

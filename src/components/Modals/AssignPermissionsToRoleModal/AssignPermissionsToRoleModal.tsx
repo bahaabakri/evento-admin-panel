@@ -9,39 +9,38 @@ import { usePaginatedFetch } from "@/hooks/usePaginatedFetch";
 import { Role } from "@/pages/Roles/roles.type";
 import { combineMultiSelectData, isFieldRequired, makeSelectUniqueByValue, mapSelectedDataToLabelValuePair } from "@/services/form";
 import { Controller, useForm } from "react-hook-form";
-import { assignRolesToAdminSchema } from "@/form-schemas/assign-roles-to-admin-schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useHttp } from "@/hooks/useHttp";
 import CustomAlert from "@/UI/CustomAlert/CustomAlert";
 import { useHandleErrorSuccess } from "@/hooks/useHandleErrorSuccess";
 import { MyResponse } from "@/types/response.type.";
 import { Loader } from "@mantine/core";
+import { assignPermissionsToRoleSchema } from "@/form-schemas/assign-permissions-to-role-schema";
 
-interface AssignRolesToAdminModalProps {
+interface AssignPermissionsToRoleModalProps {
   opened: boolean;
   onClose: () => void;
   loading?: boolean;
-  adminId: number;
+  roleId: number;
 }
-export type AssignRolesToAdminData = {
-  roles: { label: string; value: string }[];
+export type AssignPermissionsToRoleData = {
+  permissions: { label: string; value: string }[];
 };
-const AssignRolesToAdminModal = ({
+const AssignPermissionsToRoleModal = ({
   opened,
   onClose,
-  adminId,
-}: AssignRolesToAdminModalProps) => {
+  roleId,
+}: AssignPermissionsToRoleModalProps) => {
   //   const [defaultValues, setDefaultValues] =
-  //     useState<AssignRolesToAdminData | null>();
-  const [selectedRoles, setSelectedRoles] = useState<
+  //     useState<AssignPermissionsToRoleData | null>();
+  const [selectedPermissions, setSelectedPermissions] = useState<
     { label: string; value: string }[]
   >([]);
-    const [savedUser, setSavedUser] = useState<User>(null)
-
+  const [savedRole, setSavedRole] = useState<Role>(null)
   const {
     alert,
-    handleError: handleErrorAssigningRoles,
-    handleSuccess: handleSuccessAssigningRoles,
+    handleError: handleErrorAssigningPermissions,
+    handleSuccess: handleSuccessAssigningPermissions,
     setAlert,
   } = useHandleErrorSuccess();
   const {
@@ -50,18 +49,18 @@ const AssignRolesToAdminModal = ({
     // watch,
     setValue,
     formState: { isValid },
-  } = useForm<AssignRolesToAdminData>({
+  } = useForm<AssignPermissionsToRoleData>({
     mode: "onBlur",
-    resolver: yupResolver(assignRolesToAdminSchema),
+    resolver: yupResolver(assignPermissionsToRoleSchema),
   });
   const {
-    labelValuePairData: roles,
-    loading: loadingFetchRoles,
+    labelValuePairData: permissions,
+    loading: loadingFetchPermissions,
     search,
     setSearch,
     loadMore,
   } = usePaginatedFetch<Role>({
-    endpoint: "/admin/roles",
+    endpoint: "/admin/permissions",
     mapDataToLabelValuePair: (data) =>
       makeSelectUniqueByValue(
         data.map((p) => ({ label: p.name, value: p.id.toString() }))
@@ -69,50 +68,50 @@ const AssignRolesToAdminModal = ({
     perPage: 20,
     mode: "append", // 👈 infinite scroll mode
   });
-  const { request: requestAssignRoles, loading: loadingAssignRoles } =
+  const { request: requestAssignPermissions, loading: loadingAssignPermissions } =
     useHttp();
-  const { request: requestUserData, loading: loadingUserData } = useHttp();
+  const { request: requestRoleData, loading: loadingRoleData } = useHttp();
   useEffect(() => {
-    if (!adminId) return;
+    if (!roleId) return;
     // console.log('adminData', adminId);
     // get user by id
-    getUserDetails();
-  }, [adminId]);
+    getRoleDetails();
+  }, [roleId]);
     useEffect(() => {
-      setValue('roles', selectedRoles)
-    }, [selectedRoles]);
+      setValue('permissions', selectedPermissions)
+    }, [selectedPermissions]);
 
-  const resetRoles = () => setValue("roles", []);
+  const resetRoles = () => setValue("permissions", []);
 
-  const getUserDetails = async () => {
-    const { data } = await requestUserData<User>(
+  const getRoleDetails = async () => {
+    const { data } = await requestRoleData<Role>(
       "get",
-      `admin/users/admins/${adminId}`
+      `admin/roles/${roleId}`
     );
     if (data) {
-      const roles = data.roles.map((el) => ({
+      const permissions = data.permissions.map((el) => ({
         label: el.name,
         value: el.id.toString(),
       }));
-      setSelectedRoles(roles);
-      setSavedUser(data)
+      setSelectedPermissions(permissions);
+      setSavedRole(data)
     }
   };
 
-  const submitHandler = async (formData: AssignRolesToAdminData) => {
+  const submitHandler = async (formData: AssignPermissionsToRoleData) => {
     const payload = {
-      rolesIds: formData.roles.map((p) => Number(p.value)),
+      permissionsIds: formData.permissions.map((p) => Number(p.value)),
     };
-    const { data, error } = await requestAssignRoles<MyResponse<User, "user">>(
+    const { data, error } = await requestAssignPermissions<MyResponse<Role, "role">>(
       "patch",
-      `admin/users/admins/${adminId}/assign-roles`,
+      `admin/roles/${roleId}/assign-permissions`,
       payload
     );
     if (error) {
       // handle error
-      handleErrorAssigningRoles(error);
+      handleErrorAssigningPermissions(error);
     } else {
-      handleSuccessAssigningRoles(data?.message || "Roles has been assigned Successfully");
+      handleSuccessAssigningPermissions(data?.message || "Permissions has been assigned Successfully");
       onClose();
     }
   };
@@ -120,9 +119,9 @@ const AssignRolesToAdminModal = ({
     <CustomModal
       opened={opened}
       onClose={onClose}
-      title={`Assign Roles To Admin '${savedUser?.firstname}'`}
+      title={`Assign Permissions To Role '${savedRole?.name}'`}
     >
-      {loadingUserData ? (
+      {loadingRoleData ? (
         <Loader />
       ) : (
         <div className="flex flex-col gap-4">
@@ -137,32 +136,32 @@ const AssignRolesToAdminModal = ({
           <form onSubmit={handleSubmit(submitHandler)}>
             <Controller
               control={control}
-              name="roles"
+              name="permissions"
               render={({ field, fieldState }) => (
                 <CustomMultiSelect
                   handleResetSelect={resetRoles}
                   {...field}
                   isRequired={isFieldRequired(
-                    assignRolesToAdminSchema,
+                    assignPermissionsToRoleSchema,
                     field.name
                   )}
-                  label="Roles"
-                  placeholder="Select Roles"
-                  data={combineMultiSelectData(roles, selectedRoles, loadingFetchRoles)}
+                  label="Permissions"
+                  placeholder="Select Permissions"
+                  data={combineMultiSelectData(permissions, selectedPermissions, loadingFetchPermissions)}
                   searchable
                   searchValue={search}
                   onSearchChange={setSearch}
-                  nothingFoundMessage={"No roles"}
+                  nothingFoundMessage={"No permissions"}
                   value={field.value?.map((v) => v.value)}
                   onChange={(values) => {
                     // this is because hook form needs the value of multiselect to be label, value pairs
-                    field.onChange(mapSelectedDataToLabelValuePair(roles, selectedRoles, values));
+                    field.onChange(mapSelectedDataToLabelValuePair(permissions, selectedPermissions, values));
                     setSearch(search);
-                    setSelectedRoles(mapSelectedDataToLabelValuePair(roles, selectedRoles, values));
+                    setSelectedPermissions(mapSelectedDataToLabelValuePair(permissions, selectedPermissions, values));
                   }}
                   scrollAreaProps={{
                     onBottomReached: () => {
-                      if (!loadingFetchRoles) loadMore();
+                      if (!loadingFetchPermissions) loadMore();
                     },
                   }}
                   errorMessage={
@@ -179,8 +178,8 @@ const AssignRolesToAdminModal = ({
               </CustomButton>
               <CustomButton
                 type="submit"
-                disabled={!isValid || loadingAssignRoles}
-                isPending={loadingAssignRoles}
+                disabled={!isValid || loadingAssignPermissions}
+                isPending={loadingAssignPermissions}
               >
                 Assign
               </CustomButton>
@@ -192,4 +191,4 @@ const AssignRolesToAdminModal = ({
   );
 };
 
-export default AssignRolesToAdminModal;
+export default AssignPermissionsToRoleModal;

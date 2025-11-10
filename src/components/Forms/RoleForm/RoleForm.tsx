@@ -6,7 +6,7 @@ import * as yup from "yup";
 import styles from "./RoleForm.module.scss";
 import CustomTextField from "@/UI/CustomTextField/CustomTextField";
 import CustomButton from "@/UI/CustomButton/CustomButton";
-import { isFieldRequired, makeSelectUniqueByValue } from "@/services/form";
+import { combineMultiSelectData, isFieldRequired, makeSelectUniqueByValue, mapSelectedDataToLabelValuePair } from "@/services/form";
 import CustomTextarea from "@/UI/CustomTextArea/CustomTextArea";
 import CustomMultiSelect from "@/UI/CustomMultiSelect/CustomMultiSelect";
 import { useEffect, useState } from "react";
@@ -67,28 +67,6 @@ const RoleForm = ({
   useEffect(() => {
     setSelectedPermissions(defaultValues?.permissions)  
   }, [defaultValues])
-  /** ⬇ Helper: merge permissions + default values + loading placeholder */
-  const getPermissionsData = () =>
-    makeSelectUniqueByValue([
-      ...permissions, // from BE
-      ...(selectedPermissions ?? []), // saved after select
-      ...(loading
-        ? [
-            {
-              label: "Loading...",
-              value: "__loading",
-              disabled: true,
-            },
-          ]
-        : []),
-    ]);
-
-  /** ⬇ Helper: map string[] from MultiSelect → { label, value }[] for form */
-  const mapSelectedPermissions = (values: string[]) =>
-    values.map((value) => {
-      const found = [...permissions, ...selectedPermissions].find((p) => p.value === value);
-      return found ?? { label: value, value };
-    });
 
   /** ⬇ Helper: reset selected permissions */
   const resetPermissions = () => setValue("permissions", []);
@@ -148,7 +126,7 @@ const RoleForm = ({
                   isRequired={isFieldRequired(schema, field.name)}
                   label="Permissions"
                   placeholder="Select Permissions"
-                  data={getPermissionsData()}
+                  data={combineMultiSelectData(permissions, selectedPermissions, loading)}
                   searchable
                   searchValue={search}
                   onSearchChange={setSearch}
@@ -156,9 +134,9 @@ const RoleForm = ({
                   value={field.value?.map((v) => v.value)}
                   onChange={(values) => {
                     // this is because hook form needs the value of multiselect to be label, value pairs
-                    field.onChange(mapSelectedPermissions(values))
+                    field.onChange(mapSelectedDataToLabelValuePair(permissions, selectedPermissions, values))
                     setSearch(search)                    
-                    setSelectedPermissions(mapSelectedPermissions(values))
+                    setSelectedPermissions(mapSelectedDataToLabelValuePair(permissions, selectedPermissions, values))
                   }}
                   scrollAreaProps={{
                     onBottomReached: () => {

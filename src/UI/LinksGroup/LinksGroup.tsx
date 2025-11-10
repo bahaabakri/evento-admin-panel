@@ -3,6 +3,8 @@ import { IconChevronRight, type Icon, type IconProps } from '@tabler/icons-react
 import { Box, Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import classes from './LinksGroup.module.scss';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '@/hooks/useAuth';
+import useIsAllowed from '@/hooks/useIsAllowed';
 
 interface LinksGroupProps {
   icon?: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
@@ -12,16 +14,17 @@ interface LinksGroupProps {
   isDropDown?:boolean;
   link?:string;
   trigger?: 'click' | 'hover';
+  permissions?:string[]
 }
 
-export function LinksGroup({ icon: Icon, label, initiallyOpened, links, link, isDropDown, trigger = 'click' }: LinksGroupProps) {
+export function LinksGroup({ icon: Icon, label, initiallyOpened, links, link, isDropDown, trigger = 'click', permissions }: LinksGroupProps) {
   const navigate = useNavigate()
+  const {checkIsAllowed} = useIsAllowed()
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
   const handleMouseEnter = () => {
     if (trigger === 'hover' && hasLinks) setOpened(true);
   };
-
   const handleMouseLeave = () => {
     if (trigger === 'hover' && hasLinks) setOpened(false);
   };
@@ -42,6 +45,7 @@ export function LinksGroup({ icon: Icon, label, initiallyOpened, links, link, is
       
   };
   return (
+    checkIsAllowed(permissions) && 
     <Box 
         className={classes.wrapper} 
         pos="relative"

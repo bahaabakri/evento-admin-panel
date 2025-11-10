@@ -22,6 +22,8 @@ import adminsColumns from "./admins-columns";
 import { UserStatus } from "@/enums/user-status.enum";
 import RejectAdminModal from "@/components/Modals/RejectAdminModal/RejectAdminModal";
 import AssignRolesToAdminModal from "@/components/Modals/AssignRolesToAdminModal/AssignRolesToAdminModal";
+import useIsAllowed from "@/hooks/useIsAllowed";
+import { PermissionsEnum } from "../Permissions/permissions.enum";
 // import { useDisclosure } from "@mantine/hooks"
 
 const AdminsPage = () => {
@@ -32,6 +34,7 @@ const AdminsPage = () => {
   const navigate = useNavigate();
   const { openConfirmModal } = useConfirmModal();
   const [rejectingAdmin, setRejectingAdmin] = useState<User | null>(null);
+  const { checkIsAllowed } = useIsAllowed();
   const [assigningRolesAdmin, setAssigningRolesAdmin] = useState<User | null>(
     null
   );
@@ -153,76 +156,93 @@ const AdminsPage = () => {
           columns={adminsColumns}
           renderActions={(row) => (
             <div className="flex gap-2">
-              <ThemeIcon
-                variant="light"
-                color="teal"
-                className="cursor-pointer"
-                size={30}
-                onClick={() => onClickViewButton(row)}
-              >
-                <IconEye color="teal" size={18} />
-              </ThemeIcon>
-              <ThemeIcon
-                variant="light"
-                color="blue"
-                className="cursor-pointer"
-                size={30}
-                onClick={() => navigateToEditAdmin(row)}
-              >
-                <IconEdit color="blue" size={18} />
-              </ThemeIcon>
-              <ThemeIcon
-                variant="light"
-                color="red"
-                className="cursor-pointer"
-                size={30}
-                onClick={() => onClickDeleteButton(row)}
-              >
-                <IconTrash color="red" size={18} />
-              </ThemeIcon>
-              <ThemeIcon
-                title="assign roles"
-                variant="light"
-                color="violet"
-                className="cursor-pointer"
-                size={30}
-                onClick={() => onClickAssignRolesButton(row)}
-              >
-                <IconSettingsPlus color="violet" size={18} />
-              </ThemeIcon>
+              {checkIsAllowed([PermissionsEnum.VIEW_ADMINS]) && (
+                <ThemeIcon
+                  variant="light"
+                  color="teal"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => onClickViewButton(row)}
+                >
+                  <IconEye color="teal" size={18} />
+                </ThemeIcon>
+              )}
+              {checkIsAllowed([PermissionsEnum.UPDATE_ADMINS]) && (
+                <ThemeIcon
+                  variant="light"
+                  color="blue"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => navigateToEditAdmin(row)}
+                >
+                  <IconEdit color="blue" size={18} />
+                </ThemeIcon>
+              )}
+              {checkIsAllowed([PermissionsEnum.DELETE_ADMINS]) && (
+                <ThemeIcon
+                  variant="light"
+                  color="red"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => onClickDeleteButton(row)}
+                >
+                  <IconTrash color="red" size={18} />
+                </ThemeIcon>
+              )}
+
               {row.status === UserStatus.PENDING && (
                 <>
-                  <ThemeIcon
-                    title="approve admin"
-                    variant="light"
-                    color="green"
-                    className="cursor-pointer"
-                    size={30}
-                    onClick={() => onClickApproveButton(row)}
-                  >
-                    <IconCheck color="green" size={18} />
-                  </ThemeIcon>
-                  <ThemeIcon
-                    title="reject admin"
-                    variant="light"
-                    color="red"
-                    className="cursor-pointer"
-                    size={30}
-                    onClick={() => onClickRejectButton(row)}
-                  >
-                    <IconSquareX color="red" size={18} />
-                  </ThemeIcon>
+                  {checkIsAllowed([PermissionsEnum.APPROVE_ADMINS]) && (
+                    <ThemeIcon
+                      title="approve admin"
+                      variant="light"
+                      color="green"
+                      className="cursor-pointer"
+                      size={30}
+                      onClick={() => onClickApproveButton(row)}
+                    >
+                      <IconCheck color="green" size={18} />
+                    </ThemeIcon>
+                  )}
+
+                  {checkIsAllowed([PermissionsEnum.REJECT_ADMINS]) && (
+                    <ThemeIcon
+                      title="reject admin"
+                      variant="light"
+                      color="red"
+                      className="cursor-pointer"
+                      size={30}
+                      onClick={() => onClickRejectButton(row)}
+                    >
+                      <IconSquareX color="red" size={18} />
+                    </ThemeIcon>
+                  )}
                 </>
               )}
+              {row.status === UserStatus.APPROVED &&
+                checkIsAllowed([PermissionsEnum.ASSIGN_ROLES_TO_ADMIN]) && (
+                  <ThemeIcon
+                    title="assign roles"
+                    variant="light"
+                    color="violet"
+                    className="cursor-pointer"
+                    size={30}
+                    onClick={() => onClickAssignRolesButton(row)}
+                  >
+                    <IconSettingsPlus color="violet" size={18} />
+                  </ThemeIcon>
+                )}
             </div>
           )}
         >
+          {checkIsAllowed([PermissionsEnum.CREATE_ADMINS]) && 
           <CustomButton
             onClick={navigateToAddAdmin}
             leftSection={<IconPlus size={14} />}
           >
             <div>Add New Admin</div>
           </CustomButton>
+          }
         </MainTable>
         {!loadingAdminsData && admins && admins.length > 0 && (
           <Pagination
