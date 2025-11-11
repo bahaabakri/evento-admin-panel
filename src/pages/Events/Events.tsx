@@ -10,6 +10,8 @@ import CustomButton from "@/UI/CustomButton/CustomButton";
 import { useConfirmModal } from "@/hooks/useConfirmModal";
 import { showErrorToast, showSuccessToast } from "@/services/toast";
 import { MyResponse, MyResponsePagination } from "@/types/response.type.";
+import useIsAllowed from "@/hooks/useIsAllowed";
+import { PermissionsEnum } from "../Permissions/permissions.enum";
 // import { useDisclosure } from "@mantine/hooks"
 
 const EventsPage = () => {
@@ -20,6 +22,7 @@ const EventsPage = () => {
   const [events, setEvents] = useState<MyEvent[]>([]);
   const navigate = useNavigate();
   const { openConfirmModal } = useConfirmModal();
+  const { checkIsAllowed } = useIsAllowed();
 
   const fetchAllEvents = async (page: number = 1, perPage: number = 10) => {
     setPage(page);
@@ -82,33 +85,39 @@ const EventsPage = () => {
         columns={eventsColumns}
         renderActions={(row) => (
           <div className="flex gap-2">
-            <ThemeIcon
-              variant="light"
-              color="blue"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => handleEdit(row)}
-            >
-              <IconEdit color="blue" size={18} />
-            </ThemeIcon>
-            <ThemeIcon
-              variant="light"
-              color="red"
-              className="cursor-pointer"
-              size={30}
-              onClick={() => onClickDeleteButton(row)}
-            >
-              <IconTrash color="red" size={18} />
-            </ThemeIcon>
+            {checkIsAllowed([PermissionsEnum.UPDATE_EVENTS]) && (
+              <ThemeIcon
+                variant="light"
+                color="blue"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => handleEdit(row)}
+              >
+                <IconEdit color="blue" size={18} />
+              </ThemeIcon>
+            )}
+            {checkIsAllowed([PermissionsEnum.DELETE_EVENTS]) && (
+              <ThemeIcon
+                variant="light"
+                color="red"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => onClickDeleteButton(row)}
+              >
+                <IconTrash color="red" size={18} />
+              </ThemeIcon>
+            )}
           </div>
         )}
       >
-        <CustomButton
-          onClick={navigateToAddEvent}
-          leftSection={<IconPlus size={14} />}
-        >
-          <div>Add New Event</div>
-        </CustomButton>
+        {checkIsAllowed([PermissionsEnum.CREATE_EVENTS]) && (
+          <CustomButton
+            onClick={navigateToAddEvent}
+            leftSection={<IconPlus size={14} />}
+          >
+            <div>Add New Event</div>
+          </CustomButton>
+        )}
       </MainTable>
       {!loading && events && events.length > 0 && (
         <Pagination

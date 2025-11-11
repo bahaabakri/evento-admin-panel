@@ -1,5 +1,5 @@
 import { Table, ScrollArea, Loader } from "@mantine/core";
-import { useState, type ReactElement } from "react";
+import { ReactNode, useState, type ReactElement } from "react";
 import classes from "./MainTable.module.scss";
 import cx from "clsx";
 import { transformIsoDateToReadable } from "@/services/date";
@@ -8,6 +8,7 @@ import { StatusObj } from "@/types/status.type";
 import { transformStringToReadable } from "@/services/format";
 import { BASE_URL } from "@/services/api";
 import { renderTableCellValue } from "../../renders/renderTableCellValue";
+import React from "react";
 type ColumnType<T, StatusEnum> =
   | { kind: "string" | "boolean" | "date" }
   | { kind: "status"; values: StatusObj<StatusEnum>[] }
@@ -43,6 +44,17 @@ const MainTable = <T, StatusEnum>({
   renderActions,
 }: MainTableProps<T, StatusEnum>) => {
   const [scrolled, setScrolled] = useState(false);
+  const hasActions =
+    renderActions &&
+    data.some((row, index) => {
+      const element = renderActions(row, index) as React.ReactElement | null;
+      if (!element) return false;
+
+      const children = React.Children.toArray(
+        (element.props as any)?.children
+      ).filter((child) => !!child);
+      return children.length > 0;
+    });
 
   const rows = data.map((row, rowIndex) => (
     <Table.Tr key={rowIndex}>
@@ -51,7 +63,7 @@ const MainTable = <T, StatusEnum>({
           {renderTableCellValue(col, row)}
         </Table.Td>
       ))}
-      {renderActions && <Table.Td>{renderActions(row, rowIndex)}</Table.Td>}
+      {hasActions && <Table.Td>{renderActions(row, rowIndex)}</Table.Td>}
     </Table.Tr>
   ));
 
@@ -80,7 +92,7 @@ const MainTable = <T, StatusEnum>({
                 {columns.map((col) => (
                   <Table.Th key={col.header}>{col.header}</Table.Th>
                 ))}
-                {renderActions && <Table.Th>Actions</Table.Th>}
+                {hasActions && <Table.Th>Actions</Table.Th>}
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
