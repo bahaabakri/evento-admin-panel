@@ -47,14 +47,14 @@ const RoleForm = ({
     resolver: yupResolver(schema),
   });
   const {
-    data: permissions,
+    labelValuePairData: permissions,
     loading,
     search,
     setSearch,
     loadMore,
   } = usePaginatedFetch<Permission>({
     endpoint: "/admin/permissions",
-    mapData: (data) =>
+    mapDataToLabelValuePair: (data) =>
       makeSelectUniqueByValue(data.map((p) => ({ label: p.name, value: p.id.toString() }))),
     perPage: 20,
     mode: "append", // 👈 infinite scroll mode

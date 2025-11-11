@@ -8,6 +8,7 @@ interface CustomButtonProps
   isPending?: boolean;
   isSecondButton?: boolean;
   isLinkDesign?: boolean;
+  isWidthFull?: boolean;
 }
 
 const CustomButton: FC<CustomButtonProps> = ({
@@ -15,6 +16,7 @@ const CustomButton: FC<CustomButtonProps> = ({
   isPending = false,
   isSecondButton = false,
   isLinkDesign = false,
+  isWidthFull = false,
   ...buttonProps
 }) => {
   const linkStyles = {
@@ -30,14 +32,9 @@ const CustomButton: FC<CustomButtonProps> = ({
 
   return (
     <Button
+      fullWidth={!!isWidthFull}
       variant={isLinkDesign ? "subtle" : "filled"}
-      color={
-        isLinkDesign
-          ? undefined
-          : isSecondButton
-          ? "gray"
-          : "roseRed"
-      }
+      color={isLinkDesign ? undefined : isSecondButton ? "gray" : "roseRed"}
       style={isLinkDesign ? linkStyles : undefined}
       {...buttonProps}
     >

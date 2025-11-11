@@ -22,6 +22,7 @@ interface AssignPermissionsToRoleModalProps {
   onClose: () => void;
   loading?: boolean;
   roleId: number;
+  updateRolesData: () => void
 }
 export type AssignPermissionsToRoleData = {
   permissions: { label: string; value: string }[];
@@ -30,6 +31,7 @@ const AssignPermissionsToRoleModal = ({
   opened,
   onClose,
   roleId,
+  updateRolesData
 }: AssignPermissionsToRoleModalProps) => {
   //   const [defaultValues, setDefaultValues] =
   //     useState<AssignPermissionsToRoleData | null>();
@@ -112,6 +114,7 @@ const AssignPermissionsToRoleModal = ({
       handleErrorAssigningPermissions(error);
     } else {
       handleSuccessAssigningPermissions(data?.message || "Permissions has been assigned Successfully");
+      updateRolesData()
       onClose();
     }
   };

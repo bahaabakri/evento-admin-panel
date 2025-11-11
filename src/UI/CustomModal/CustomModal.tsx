@@ -25,6 +25,11 @@ const CustomModal = ({
       size={size}
       radius="md"
       overlayProps={{ backgroundOpacity: 0.6, blur: 3 }}
+      transitionProps={{
+        transition: "pop", // same transition used in Mantine's confirm modals
+        duration: 250,      // animation speed
+        timingFunction: "ease",
+      }}
     >
       {children}
     </Modal>

@@ -32,7 +32,9 @@ export function useHttp() {
         if (axios.isAxiosError(err)) {
           message = err.response?.data?.message || err.message || message;
           if(err.status === 401) {
-            navigate("/auth/unauthorized", { replace: true });
+            navigate("/auth/unauthenticated", { replace: true });
+          } else if(err.status === 403) {
+            navigate("/auth/unauthorized", { replace: true, state: {message}});
           }
         } else if (err instanceof Error) {
           message = err.message;

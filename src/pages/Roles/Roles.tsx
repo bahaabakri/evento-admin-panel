@@ -154,6 +154,7 @@ const RolesPage = () => {
         )}
       </div>
       <AssignPermissionsToRoleModal
+        updateRolesData = {() => fetchAllRoles()}
         key={assigningPersRole?.id}
         opened={!!assigningPersRole}
         roleId={assigningPersRole?.id}
