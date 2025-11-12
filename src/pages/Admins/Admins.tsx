@@ -12,7 +12,7 @@ import {
   IconSquareX,
   IconTrash,
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomButton from "@/UI/CustomButton/CustomButton";
 import { useConfirmModal } from "@/hooks/useConfirmModal";
 import { showErrorToast, showSuccessToast } from "@/services/toast";
@@ -35,6 +35,9 @@ const AdminsPage = () => {
   const { openConfirmModal } = useConfirmModal();
   const [rejectingAdmin, setRejectingAdmin] = useState<User | null>(null);
   const { checkIsAllowed } = useIsAllowed();
+  const [searchParams] = useSearchParams()
+  const roleId = searchParams.get('roleId')
+  const roleName = searchParams.get('roleName')
   const [assigningRolesAdmin, setAssigningRolesAdmin] = useState<User | null>(
     null
   );
@@ -52,9 +55,10 @@ const AdminsPage = () => {
 
   const fetchAllAdmins = async (page: number = 1, perPage: number = 10) => {
     setPage(page);
+    const roleFilter =  roleId ? `&roleId=${roleId}` : ''
     const { data: dataRes } = await requestAdminsData<
       MyResponsePagination<User>
-    >("get", `admin/users/admins?page=${page}&perPage=${perPage}`);
+    >("get", `admin/users/admins?page=${page}&perPage=${perPage}${roleFilter}`);
     if (dataRes) {
       const { data, meta } = dataRes;
       const { perPage, total } = meta;
@@ -149,7 +153,7 @@ const AdminsPage = () => {
         {/* Modal content */}
         {/* </Modal> */}
         <MainTable
-          title={"All Admins"}
+          title={ roleName ? `Admins Related To Role '${roleName}'` : "All Admins"}
           loading={loadingAdminsData}
           data={admins}
           errorMessage={errorMessageAdminsData}

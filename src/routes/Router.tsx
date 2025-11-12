@@ -25,6 +25,7 @@ import PermissionsPage from "@/pages/Permissions/Permissions";
 import UnauthorizedAccountPage from "@/pages/Auth/UnauthorizedAccountPage/UnauthorizedAccountPage";
 import AdminDetailsPage from "@/pages/Admins/details/AdminDetails";
 import UnauthenticatedAccountPage from "@/pages/Auth/UnauthenticatedAccountPage/UnauthenticatedAccountPage";
+import UserDetailsPage from "@/pages/Users/details/UserDetails";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
               { index: true, element: <UsersPage /> },
               { path: "add", element: <AddUserPage /> },
               { path: "edit/:userId", element: <EditUserPage /> },
+              {path: "details/:userId", element: <UserDetailsPage />}
             ],
           },
           {

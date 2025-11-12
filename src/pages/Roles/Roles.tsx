@@ -7,8 +7,9 @@ import {
   IconPlus,
   IconSettingsPlus,
   IconTrash,
+  IconUserCog,
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomButton from "@/UI/CustomButton/CustomButton";
 import { useConfirmModal } from "@/hooks/useConfirmModal";
 import { showErrorToast, showSuccessToast } from "@/services/toast";
@@ -30,13 +31,17 @@ const RolesPage = () => {
   const navigate = useNavigate();
   const { openConfirmModal } = useConfirmModal();
   const { checkIsAllowed } = useIsAllowed();
-
+  const [searchParams] = useSearchParams();
+  const permissionId = searchParams.get("permissionId");
+  const permissionName = searchParams.get("permissionName");
   const [assigningPersRole, setAssigningPersRole] = useState<Role | null>(null);
   const fetchAllRoles = async (page: number = 1, perPage: number = 10) => {
     setPage(page);
+    const permissionFilter = permissionId ? `&permissionId=${permissionId}` : "";
+
     const { data: dataRes } = await request<MyResponsePagination<Role>>(
       "get",
-      `admin/roles?page=${page}&perPage=${perPage}`
+      `admin/roles?page=${page}&perPage=${perPage}${permissionFilter}`
     );
     if (dataRes) {
       const { data, meta } = dataRes;
@@ -54,6 +59,10 @@ const RolesPage = () => {
 
   const navigateToEditRole = (row: Role) => {
     navigate(`/roles/edit/${row.id}`);
+  };
+
+  const navigateToRoleAdmins = (row: Role) => {
+    navigate(`/admins?roleId=${row.id}&roleName=${row.name}`);
   };
   const onClickDeleteButton = async (row: Role) => {
     // Implement delete functionality here
@@ -91,13 +100,29 @@ const RolesPage = () => {
         {/* Modal content */}
         {/* </Modal> */}
         <MainTable
-          title={"All Roles"}
+          title={
+            permissionName
+              ? `Roles Related To Permission '${permissionName}'`
+              : "All Roles"
+          }
           loading={loading}
           data={roles}
           errorMessage={errorMessage}
           columns={rolesColumns}
           renderActions={(row) => (
             <div className="flex gap-2">
+              {checkIsAllowed([PermissionsEnum.VIEW_ADMINS]) && (
+                <ThemeIcon
+                  title="Show related admins"
+                  variant="light"
+                  color="teal"
+                  className="cursor-pointer"
+                  size={30}
+                  onClick={() => navigateToRoleAdmins(row)}
+                >
+                  <IconUserCog color="teal" size={18} />
+                </ThemeIcon>
+              )}
               {checkIsAllowed([PermissionsEnum.UPDATE_ROLES]) && (
                 <ThemeIcon
                   variant="light"
@@ -154,7 +179,7 @@ const RolesPage = () => {
         )}
       </div>
       <AssignPermissionsToRoleModal
-        updateRolesData = {() => fetchAllRoles()}
+        updateRolesData={() => fetchAllRoles()}
         key={assigningPersRole?.id}
         opened={!!assigningPersRole}
         roleId={assigningPersRole?.id}

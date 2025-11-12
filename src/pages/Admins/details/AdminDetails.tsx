@@ -20,15 +20,9 @@ import EventCard from "@/components/Events/EventCard/EventCard";
  * @returns
  */
 const AdminDetailsPage = () => {
-  const {
-    alert,
-    handleError: handleErrorEditingAdmin,
-    handleSuccess: handleSuccessEditingAdmin,
-    setAlert,
-  } = useHandleErrorSuccess();
+
   const [adminData, setAdminData] = useState<User | null>();
   const { adminId } = useParams();
-  const { loading: loadingEditAdmin, request: requestEditAdmin } = useHttp();
   const { loading: loadingAdminData, request: requestAdminData } = useHttp();
 
   useEffect(() => {
@@ -77,14 +71,6 @@ const AdminDetailsPage = () => {
     <div className={styles["admin-details-wrapper"]}>
       <div className={styles["admin-details"]}>
         <h1 className={styles["admin-details-title"]}>Admin Details for {adminData?.firstname}</h1>
-        {alert && (
-          <CustomAlert
-            onClose={() => setAlert(null)}
-            title={alert.title}
-            message={alert.message}
-            type={alert.type}
-          />
-        )}
         {loadingAdminData ? (
           <Loader />
         ) : (

@@ -17,4 +17,5 @@ export interface User {
   roles: Role[];
   createdEvents: MyEvent[]
   permissions: Permission[]
+  // tickets: Ticket[]
 }

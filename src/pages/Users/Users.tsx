@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MainTable from "@/UI/MainTable/MainTable";
 import { useHttp } from "@/hooks/useHttp";
 import { Pagination, ThemeIcon } from "@mantine/core";
-import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconEye, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "@/UI/CustomButton/CustomButton";
 import { useConfirmModal } from "@/hooks/useConfirmModal";
@@ -46,7 +46,10 @@ const UsersPage = () => {
 
   const navigateToEditUser = (row: User) => {
     navigate(`/users/edit/${row.id}`);
-  };
+};
+const onClickViewButton = (row: User) => {
+    navigate(`/users/details/${row.id}`);
+  }
   const onClickDeleteButton = async (row: User) => {
     // Implement delete functionality here
 
@@ -87,6 +90,17 @@ const UsersPage = () => {
         columns={usersColumns}
         renderActions={(row) => (
           <div className="flex gap-2">
+            {checkIsAllowed([PermissionsEnum.VIEW_USERS]) && (
+              <ThemeIcon
+                variant="light"
+                color="teal"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => onClickViewButton(row)}
+              >
+                <IconEye color="teal" size={18} />
+              </ThemeIcon>
+            )}
             {checkIsAllowed([PermissionsEnum.UPDATE_USERS]) && (
               <ThemeIcon
                 variant="light"

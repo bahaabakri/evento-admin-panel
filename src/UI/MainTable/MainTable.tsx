@@ -79,6 +79,8 @@ const MainTable = <T, StatusEnum>({
         </div>
       ) : errorMessage ? (
         <p className="error">{errorMessage}</p>
+      ) : data.length == 0 ? (
+        <p className="text-gray-5 text-center">No Data Found, try to add data</p>
       ) : (
         <ScrollArea
           h="70vh"
