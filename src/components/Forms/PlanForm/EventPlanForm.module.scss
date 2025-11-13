@@ -1,0 +1,12 @@
+.new-plan-form {
+  @apply container flex flex-col lg:flex-row gap-5;
+  .side-wrapper {
+    @apply flex flex-col gap-5 flex-1;
+  }
+  .plan-form-item {
+    @apply flex flex-col gap-2 font-bold;
+  }
+}
+.submit-btn-wrapper {
+  @apply my-5 mx-auto;
+}

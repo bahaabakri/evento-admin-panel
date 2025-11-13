@@ -1,0 +1,10 @@
+.new-plan-wrapper {
+    @apply container mx-auto;
+    .new-plan {
+        .new-plan-title {
+            @apply text-xl font-bold;
+            color: var(--primary-color);
+        }
+        @apply flex flex-col gap-5;
+    }
+}

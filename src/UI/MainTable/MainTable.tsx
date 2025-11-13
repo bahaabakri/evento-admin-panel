@@ -24,10 +24,12 @@ interface MainTableProps<T, StatusEnum> {
   title?: string;
   data: T[];
   columns: Column<T, StatusEnum>[];
-  loading: boolean;
-  errorMessage: string | null;
+  loading?: boolean;
+  errorMessage?: string | null;
   children?: ReactElement;
+  isItTwoLevelsTable?: boolean;
   renderActions?: (row: T, rowIndex: number) => ReactElement;
+  renderNestedRows?: (row: T, rowIndex: number) => ReactElement | null; // 👈 add this
 }
 const statusColorMap: Record<string, string> = {
   success: "text-success-5",
@@ -42,8 +44,20 @@ const MainTable = <T, StatusEnum>({
   loading,
   errorMessage,
   renderActions,
+  isItTwoLevelsTable = false,
+  renderNestedRows,
 }: MainTableProps<T, StatusEnum>) => {
   const [scrolled, setScrolled] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+
+  const toggleRow = (index: number) => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
   const hasActions =
     renderActions &&
     data.some((row, index) => {
@@ -56,16 +70,39 @@ const MainTable = <T, StatusEnum>({
       return children.length > 0;
     });
 
-  const rows = data.map((row, rowIndex) => (
-    <Table.Tr key={rowIndex}>
-      {columns.map((col) => (
-        <Table.Td key={String(col.accessor)}>
-          {renderTableCellValue(col, row)}
-        </Table.Td>
-      ))}
-      {hasActions && <Table.Td>{renderActions(row, rowIndex)}</Table.Td>}
-    </Table.Tr>
-  ));
+  const rows = data.map((row, rowIndex) => {
+    const isExpanded = expandedRows.has(rowIndex);
+    return (
+      <React.Fragment key={rowIndex}>
+        <Table.Tr>
+          {isItTwoLevelsTable && (
+            <Table.Td
+              onClick={() => toggleRow(rowIndex)}
+              className="cursor-pointer"
+            >
+              {isExpanded ? "▼" : "▶"}
+            </Table.Td>
+          )}
+
+          {columns.map((col) => (
+            <Table.Td key={String(col.accessor)}>
+              {renderTableCellValue(col, row)}
+            </Table.Td>
+          ))}
+
+          {hasActions && <Table.Td>{renderActions(row, rowIndex)}</Table.Td>}
+        </Table.Tr>
+
+        {isExpanded && renderNestedRows && (
+          <Table.Tr>
+            <Table.Td colSpan={columns.length + (hasActions ? 2 : 1)}>
+              {renderNestedRows(row, rowIndex)}
+            </Table.Td>
+          </Table.Tr>
+        )}
+      </React.Fragment>
+    );
+  });
 
   return (
     <>
@@ -80,7 +117,9 @@ const MainTable = <T, StatusEnum>({
       ) : errorMessage ? (
         <p className="error">{errorMessage}</p>
       ) : data.length == 0 ? (
-        <p className="text-gray-5 text-center">No Data Found, try to add data</p>
+        <p className="text-gray-5 text-center">
+          No Data Found, try to add data
+        </p>
       ) : (
         <ScrollArea
           h="70vh"
@@ -91,6 +130,8 @@ const MainTable = <T, StatusEnum>({
               className={cx(classes.header, { [classes.scrolled]: scrolled })}
             >
               <Table.Tr>
+                {isItTwoLevelsTable && <Table.Th></Table.Th>}
+
                 {columns.map((col) => (
                   <Table.Th key={col.header}>{col.header}</Table.Th>
                 ))}

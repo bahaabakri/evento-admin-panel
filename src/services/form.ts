@@ -14,6 +14,10 @@ export const isFieldRequired = (
   const field = schemaDesc.fields[fieldName];
   if (!field) return false;
 
+  // ALl number fields are required
+  if(field.type === 'number') {
+    return true
+  }
   // Only proceed if the field has a tests array
   if ("tests" in field && Array.isArray(field.tests)) {
     return field.tests.some((test) => test.name === "required");

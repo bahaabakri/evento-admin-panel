@@ -3,7 +3,7 @@ import MainTable from "@/UI/MainTable/MainTable";
 import { useHttp } from "@/hooks/useHttp";
 import type { MyEvent } from "./events.type";
 import eventsColumns from "./events-columns";
-import { Pagination, ThemeIcon } from "@mantine/core";
+import { Pagination, Table, ThemeIcon } from "@mantine/core";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "@/UI/CustomButton/CustomButton";
@@ -12,6 +12,7 @@ import { showErrorToast, showSuccessToast } from "@/services/toast";
 import { MyResponse, MyResponsePagination } from "@/types/response.type.";
 import useIsAllowed from "@/hooks/useIsAllowed";
 import { PermissionsEnum } from "../Permissions/permissions.enum";
+import eventPlansColumns from "./plans/event-plans-columns";
 // import { useDisclosure } from "@mantine/hooks"
 
 const EventsPage = () => {
@@ -44,8 +45,12 @@ const EventsPage = () => {
     fetchAllEvents();
   }, []);
 
-  const handleEdit = (row: MyEvent) => {
+  const navigateToEditEvent = (row: MyEvent) => {
     navigate(`/events/edit/${row.id}`);
+  };
+
+  const navigateToCreatePlan = (row: MyEvent) => {
+    navigate(`/events/${row.id}/plans/add`);
   };
   const onClickDeleteButton = async (row: MyEvent) => {
     // Implement delete functionality here
@@ -83,6 +88,13 @@ const EventsPage = () => {
         data={events}
         errorMessage={errorMessage}
         columns={eventsColumns}
+        isItTwoLevelsTable
+        renderNestedRows={(event) => (
+          <MainTable 
+            data={event.plans}
+            columns={eventPlansColumns}            
+          />
+        )}
         renderActions={(row) => (
           <div className="flex gap-2">
             {checkIsAllowed([PermissionsEnum.UPDATE_EVENTS]) && (
@@ -91,7 +103,7 @@ const EventsPage = () => {
                 color="blue"
                 className="cursor-pointer"
                 size={30}
-                onClick={() => handleEdit(row)}
+                onClick={() => navigateToEditEvent(row)}
               >
                 <IconEdit color="blue" size={18} />
               </ThemeIcon>
@@ -105,6 +117,18 @@ const EventsPage = () => {
                 onClick={() => onClickDeleteButton(row)}
               >
                 <IconTrash color="red" size={18} />
+              </ThemeIcon>
+            )}
+            {checkIsAllowed([PermissionsEnum.CREATE_PLANS]) && (
+              <ThemeIcon
+                title="Create Plan"
+                variant="light"
+                color="teal"
+                className="cursor-pointer"
+                size={30}
+                onClick={() => navigateToCreatePlan(row)}
+              >
+                <IconPlus color="teal" size={18} />
               </ThemeIcon>
             )}
           </div>
