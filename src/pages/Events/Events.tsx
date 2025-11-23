@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MainTable from "@/UI/MainTable/MainTable";
 import { useHttp } from "@/hooks/useHttp";
-import type { MyEvent } from "./events.type";
+import type { MyEvent, MyEventPlan } from "./events.type";
 import eventsColumns from "./events-columns";
 import { Pagination, Table, ThemeIcon } from "@mantine/core";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
@@ -48,24 +48,26 @@ const EventsPage = () => {
   const navigateToEditEvent = (row: MyEvent) => {
     navigate(`/events/edit/${row.id}`);
   };
-
+  const navigateToEditPlan = (row: MyEventPlan, eventId:number) => {
+    navigate(`/events/${eventId}/plans/edit/${row.id}`);
+  };
   const navigateToCreatePlan = (row: MyEvent) => {
     navigate(`/events/${row.id}/plans/add`);
   };
-  const onClickDeleteButton = async (row: MyEvent) => {
+  const onClickDeleteEventButton = async (row: MyEvent) => {
     // Implement delete functionality here
 
     openConfirmModal({
-      title: "Delete item?",
+      title: "Delete Event?",
       message:
-        "Are you sure you want to delete this item? This cannot be undone.",
-      onConfirm: () => handleDelete(row),
+        "Are you sure you want to delete this event? This cannot be undone.",
+      onConfirm: () => handleDeleteEvent(row),
       confirmLabel: "Delete",
       color: "red",
     });
   };
 
-  const handleDelete = async (row: MyEvent) => {
+  const handleDeleteEvent = async (row: MyEvent) => {
     const { data, error } = await request<MyResponse<MyEvent, "event">>(
       "delete",
       `admin/events/${row.id}`
@@ -74,6 +76,32 @@ const EventsPage = () => {
       showErrorToast(error || "Failed to delete event");
     } else {
       showSuccessToast(data?.message || "Event deleted successfully");
+      fetchAllEvents(activePage);
+    }
+  };
+
+  const onClickDeletePlanButton = async (row: MyEventPlan) => {
+    // Implement delete functionality here
+
+    openConfirmModal({
+      title: "Delete Plan?",
+      message:
+        "Are you sure you want to delete this event plan? This cannot be undone.",
+      onConfirm: () => handleDeletePlan(row),
+      confirmLabel: "Delete",
+      color: "red",
+    });
+  };
+
+  const handleDeletePlan = async (row: MyEventPlan) => {
+    const { data, error } = await request<MyResponse<MyEventPlan, "event">>(
+      "delete",
+      `admin/plans/${row.id}`
+    );
+    if (error) {
+      showErrorToast(error || "Failed to delete plan");
+    } else {
+      showSuccessToast(data?.message || "Event Plan deleted successfully");
       fetchAllEvents(activePage);
     }
   };
@@ -88,11 +116,39 @@ const EventsPage = () => {
         data={events}
         errorMessage={errorMessage}
         columns={eventsColumns}
-        isItTwoLevelsTable
+        twoLevelsTableStatus="parent"
         renderNestedRows={(event) => (
-          <MainTable 
+          <MainTable
+            twoLevelsTableStatus="child"
+            title={`Plans for Event '${event.name}'`}
             data={event.plans}
-            columns={eventPlansColumns}            
+            columns={eventPlansColumns}
+            renderActions={(row) => (
+              <div className="flex gap-2">
+                {checkIsAllowed([PermissionsEnum.UPDATE_PLANS]) && (
+                  <ThemeIcon
+                    variant="light"
+                    color="blue"
+                    className="cursor-pointer"
+                    size={30}
+                    onClick={() => navigateToEditPlan(row, event.id)}
+                  >
+                    <IconEdit color="blue" size={18} />
+                  </ThemeIcon>
+                )}
+                {checkIsAllowed([PermissionsEnum.DELETE_PLANS]) && (
+                  <ThemeIcon
+                    variant="light"
+                    color="red"
+                    className="cursor-pointer"
+                    size={30}
+                    onClick={() => onClickDeletePlanButton(row)}
+                  >
+                    <IconTrash color="red" size={18} />
+                  </ThemeIcon>
+                )}
+              </div>
+            )}
           />
         )}
         renderActions={(row) => (
@@ -114,7 +170,7 @@ const EventsPage = () => {
                 color="red"
                 className="cursor-pointer"
                 size={30}
-                onClick={() => onClickDeleteButton(row)}
+                onClick={() => onClickDeleteEventButton(row)}
               >
                 <IconTrash color="red" size={18} />
               </ThemeIcon>

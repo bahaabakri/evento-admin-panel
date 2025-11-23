@@ -27,6 +27,7 @@ import AdminDetailsPage from "@/pages/Admins/details/AdminDetails";
 import UnauthenticatedAccountPage from "@/pages/Auth/UnauthenticatedAccountPage/UnauthenticatedAccountPage";
 import UserDetailsPage from "@/pages/Users/details/UserDetails";
 import AddEventPlanPage from "@/pages/Events/plans/add/AddEventPlan";
+import EditEventPlanPage from "@/pages/Events/plans/edit/EditEventPlan";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +46,10 @@ const router = createBrowserRouter([
               { path: "edit/:eventId", element: <EditEventPage /> },
               {
                 path: ":eventId/plans",
-                children: [{ path: "add", element: <AddEventPlanPage /> }],
+                children: [
+                  { path: "add", element: <AddEventPlanPage /> },
+                  { path: "edit/:planId", element: <EditEventPlanPage /> },
+                ],
               },
             ],
           },

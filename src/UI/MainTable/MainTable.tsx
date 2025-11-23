@@ -27,7 +27,7 @@ interface MainTableProps<T, StatusEnum> {
   loading?: boolean;
   errorMessage?: string | null;
   children?: ReactElement;
-  isItTwoLevelsTable?: boolean;
+  twoLevelsTableStatus?: "parent" | "child";
   renderActions?: (row: T, rowIndex: number) => ReactElement;
   renderNestedRows?: (row: T, rowIndex: number) => ReactElement | null; // 👈 add this
 }
@@ -44,7 +44,7 @@ const MainTable = <T, StatusEnum>({
   loading,
   errorMessage,
   renderActions,
-  isItTwoLevelsTable = false,
+  twoLevelsTableStatus,
   renderNestedRows,
 }: MainTableProps<T, StatusEnum>) => {
   const [scrolled, setScrolled] = useState(false);
@@ -75,7 +75,7 @@ const MainTable = <T, StatusEnum>({
     return (
       <React.Fragment key={rowIndex}>
         <Table.Tr>
-          {isItTwoLevelsTable && (
+          {twoLevelsTableStatus === "parent" && (
             <Table.Td
               onClick={() => toggleRow(rowIndex)}
               className="cursor-pointer"
@@ -122,7 +122,7 @@ const MainTable = <T, StatusEnum>({
         </p>
       ) : (
         <ScrollArea
-          h="70vh"
+          h={twoLevelsTableStatus === "child" ? "fit-content" : "70vh"}
           onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
         >
           <Table miw={700}>
@@ -130,7 +130,7 @@ const MainTable = <T, StatusEnum>({
               className={cx(classes.header, { [classes.scrolled]: scrolled })}
             >
               <Table.Tr>
-                {isItTwoLevelsTable && <Table.Th></Table.Th>}
+                {twoLevelsTableStatus === "parent" && <Table.Th></Table.Th>}
 
                 {columns.map((col) => (
                   <Table.Th key={col.header}>{col.header}</Table.Th>
