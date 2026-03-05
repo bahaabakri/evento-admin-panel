@@ -1,17 +1,19 @@
 import { PermissionsEnum } from "@/pages/Permissions/permissions.enum";
 import type { DropDownItem } from "@/types/dropdown-Item.type";
 import {
+  IconBrowser,
   IconBulb,
   IconCalendarEvent,
   IconCheckbox,
   IconClearAll,
   IconClock,
   IconClockX,
-  IconKey,
+  IconTableHeart,
   IconList,
   IconSettingsCog,
   IconUser,
   IconUserCog,
+  IconKey,
 } from "@tabler/icons-react";
 const mainSidebarMenu: DropDownItem[] = [
   {
@@ -56,6 +58,18 @@ const mainSidebarMenu: DropDownItem[] = [
       {
         label: "One year ago",
         link: "/",
+      },
+    ],
+  },
+  {
+    icon: IconBrowser,
+    label: "UI Management",
+    notifications: 3,
+    links: [
+      {
+        icon: IconTableHeart,
+        label: "Hero Section",
+        link: "/ui/heroes",
       },
     ],
   },

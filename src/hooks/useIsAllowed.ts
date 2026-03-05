@@ -4,6 +4,8 @@ import { useMemo } from "react";
 const useIsAllowed = () => {
   const { user } = useAuth();
 
+  // console.log("user", user);
+  
   const allUserPermissions = useMemo(
     () => user?.roles?.flatMap(role => role.permissions) ?? [],
     [user?.roles]

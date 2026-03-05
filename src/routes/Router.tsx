@@ -28,6 +28,10 @@ import UnauthenticatedAccountPage from "@/pages/Auth/UnauthenticatedAccountPage/
 import UserDetailsPage from "@/pages/Users/details/UserDetails";
 import AddEventPlanPage from "@/pages/Events/plans/add/AddEventPlan";
 import EditEventPlanPage from "@/pages/Events/plans/edit/EditEventPlan";
+import HeroesPage from "@/pages/UI/Heroes/HeroesPage";
+import HeroDetailsPage from "@/pages/UI/Heroes/details/HeroDetails";
+import AddHeroPage from "@/pages/UI/Heroes/add/AddHero";
+import EditHeroPage from "@/pages/UI/Heroes/edit/EditHero";
 
 const router = createBrowserRouter([
   {
@@ -83,7 +87,18 @@ const router = createBrowserRouter([
             path: "permissions",
             children: [{ index: true, element: <PermissionsPage /> }],
           },
-        ],
+          {
+            path: "ui",
+            children: [
+              { path: "heroes", children: [
+                { index: true, element: <HeroesPage /> },
+                { path: ":heroId", element: <HeroDetailsPage /> },
+                { path: "add", element: <AddHeroPage /> },
+                { path: "edit/:heroId", element: <EditHeroPage /> },
+              ] },
+            ]
+          }
+        ]
       },
 
       { path: "auth/register", element: <Register /> },

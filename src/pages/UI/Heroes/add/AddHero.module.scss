@@ -1,0 +1,10 @@
+.new-hero-wrapper {
+    @apply container mx-auto;
+    .new-hero {
+        .new-hero-title {
+            @apply text-xl font-bold;
+            color: var(--primary-color);
+        }
+        @apply flex flex-col gap-5;
+    }
+}

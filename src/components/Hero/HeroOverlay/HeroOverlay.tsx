@@ -20,7 +20,7 @@ const HeroOverlay: FC = () => {
     // Placeholder for potential future logic
     const {data, error} = (await request<HeroResponse>(
       "get",
-      "admin/heros/activeHero"
+      "admin/heroes/activeHero"
     ));
     if(error) {
       console.error("Error fetching active hero data:", error);
